@@ -1,0 +1,3 @@
+﻿  MetadataProcessor.cpp
+C:\Users\madis\source\repos\il2cpp-cpp-class-cenerator\il2cpp-cpp-class-cenerator\metadata-processing\typeconversion.h(44,2): warning C4091: 'typedef ': ignored on left of 'Il2CppTypeEnum' when no variable is declared
+  il2cpp-cpp-class-cenerator.vcxproj -> C:\Users\madis\source\repos\il2cpp-cpp-class-cenerator\x64\Debug\il2cpp-cpp-class-cenerator.exe
