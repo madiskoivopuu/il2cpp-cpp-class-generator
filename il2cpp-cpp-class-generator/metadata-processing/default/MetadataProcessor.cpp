@@ -42,23 +42,23 @@ Il2CppPropertyDefinition* GetPropInfoFromIndex(Il2CppGlobalMetadataHeader* heade
 	return reinterpret_cast<Il2CppPropertyDefinition*>(header + header->propertiesOffset) + index;
 }
 
-std::vector<AssemblyData> ParseMetadata(void* metadataBytes) {
+std::vector<Il2cppImageData> ParseMetadata(void* metadataBytes) {
 	Il2CppGlobalMetadataHeader* header = static_cast<Il2CppGlobalMetadataHeader*>(metadataBytes);
 	assert(header->sanity == 0xFAB11BAF);
 	
-	std::vector<AssemblyData> allAssemblies;
+	std::vector<Il2cppImageData> allAssemblies;
 
-	// parse classes, their fields props methods etc from assemblies
+	// parse classes, their fields props methods etc from images
 	Il2CppImageDefinition* imageDefStart = (Il2CppImageDefinition*)((const char*)header + header->assembliesOffset);
 	int imageCount = header->imagesCount / sizeof(Il2CppImageDefinition);
 	for (int imgIdx = 0; imgIdx < imageCount; imgIdx++) {
 		Il2CppImageDefinition* image = imageDefStart + imgIdx;
 
-		AssemblyData assemblyData;
-		assemblyData.name = GetStringFromIndex(header, assemblyDef->aname.nameIndex);
-		std::cout << assemblyData.name << std::endl;
+		Il2cppImageData imgData;
+		imgData.name = GetStringFromIndex(header, image->nameIndex);
+		std::cout << imgData.name << std::endl;
 
-		allAssemblies.push_back(assemblyData);
+		allAssemblies.push_back(imgData);
 	}
 
 	return allAssemblies;

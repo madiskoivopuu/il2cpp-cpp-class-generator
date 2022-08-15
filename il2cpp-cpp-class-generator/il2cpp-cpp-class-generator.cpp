@@ -4,40 +4,88 @@
 #include <iostream>
 #include <Windows.h>
 #include <commdlg.h>
+#include <winver.h>
+#pragma comment(lib,"Version.lib")
 
 #include "metadata-processing/default/MetadataProcessor.h"
 #include "metadata-processing/typeinfo.h"
 
-int main()
-{
-	std::cout << "Choose your global-metadata.dat file..." << std::endl;
 
-    char output[MAX_PATH] = { 0 };
-
-	OPENFILENAME selectedFile = { 0 };
+bool GetUserSelectedFileLoc(char* location) {
+    OPENFILENAME selectedFile = { 0 };
     selectedFile.lStructSize = sizeof(OPENFILENAME);
     selectedFile.hwndOwner = NULL;
     selectedFile.lpstrFilter = "Any File\0*.*\0";
-    selectedFile.lpstrFile = output; // must be CHAR[]...
+    selectedFile.lpstrFile = location; // must be CHAR[]...
     selectedFile.nMaxFile = MAX_PATH;
     selectedFile.lpstrFileTitle = NULL;
     selectedFile.nMaxFileTitle = MAX_PATH;
     selectedFile.lpstrTitle = "Select an input File";
     selectedFile.Flags = OFN_DONTADDTORECENT | OFN_FILEMUSTEXIST;
 
-    if (GetOpenFileName(&selectedFile)) {
-        void* metadataBytes = LoadMetadataFile(selectedFile.lpstrFile);
-        if (!metadataBytes) return 0;
+    return GetOpenFileName(&selectedFile);
+}
 
-        std::vector<AssemblyData> il2cppImages = ParseMetadata(metadataBytes);
+struct UnityVersion {
+    uint16_t major;
+    uint16_t minor;
+    uint16_t build;
+};
+bool GetUnityVersion(char* unityPath, UnityVersion& unityVer) {
+    int verInfoSize = GetFileVersionInfoSize(unityPath, 0);
+    if (verInfoSize == 0) return false;
 
+    BYTE* data = new BYTE[verInfoSize];
+    LPVOID queryPtr = 0;
+    unsigned int size = 0;
+    if (!GetFileVersionInfoA(unityPath, 0, verInfoSize, data)) return false;
 
-        free(metadataBytes);
-    }
-    else {
-        std::cout << "You failed to select any file." << std::endl;
+    if (!VerQueryValue(data, "\\", &queryPtr, &size)) return false;
+    if (!size) return false;
+
+    VS_FIXEDFILEINFO* fileInfo = static_cast<VS_FIXEDFILEINFO*>(queryPtr);
+    unityVer.major = HIWORD(fileInfo->dwFileVersionMS);
+    unityVer.minor = LOWORD(fileInfo->dwFileVersionMS);
+    unityVer.build = HIWORD(fileInfo->dwProductVersionLS);
+}
+
+int main()
+{
+
+    char metadataLoc[MAX_PATH+FILENAME_MAX] = { 0 };
+    char unityLoc[MAX_PATH+FILENAME_MAX] = { 0 };
+
+    std::cout << "Choose your global-metadata.dat file..." << std::endl;
+    if (!GetUserSelectedFileLoc(metadataLoc)) {
+        std::cout << "Selection failed, exiting..." << std::endl;
         std::cin.get();
+        return 0;
     }
+    std::cout << "Choose your UnityPlayer.dll/libunity.so file..." << std::endl;
+    if (!GetUserSelectedFileLoc(unityLoc)) {
+        std::cout << "Selection failed, exiting..." << std::endl;
+        std::cin.get();
+        return 0;
+    }
+
+    UnityVersion version = { 0 };
+    if (!GetUnityVersion(unityLoc, version)) {
+        std::cout << "Failed to get unity version from provided dll/so." << std::endl;
+        std::cin.get();
+        return 0;
+    }
+
+    std::cout << version.major << std::endl;
+    std::cout << version.minor << std::endl;
+    std::cout << version.build << std::endl;
+
+     //void* metadataBytes = LoadMetadataFile(metadataLoc);
+    // if (!metadataBytes) return 0;
+
+     //std::vector<Il2cppImageData> il2cppImages = ParseMetadata(metadataBytes);
+
+
+     //free(metadataBytes);
 
     return 0;
 }

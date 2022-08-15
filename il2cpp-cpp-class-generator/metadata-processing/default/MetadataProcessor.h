@@ -3,5 +3,5 @@
 #include <vector>
 #include "../typeinfo.h"
 
-std::vector<AssemblyData> ParseMetadata(void* metadataBytes);
+std::vector<Il2cppImageData> ParseMetadata(void* metadataBytes);
 void* LoadMetadataFile(char* filePath);
