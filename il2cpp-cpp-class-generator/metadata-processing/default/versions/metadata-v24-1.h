@@ -1,94 +1,5 @@
 #pragma once
-#pragma once
-
-#include <stdint.h>
-
-// This file contains the structures specifying how we store converted metadata.
-// These structures have 3 constraints:
-// 1. These structures will be stored in an external file, and as such must not contain any pointers.
-//    All references to other metadata should occur via an index into a corresponding table.
-// 2. These structures are assumed to be const. Either const structures in the binary or mapped as
-//    readonly memory from an external file. Do not add any 'calculated' fields which will be written to at runtime.
-// 3. These structures should be optimized for size. Other structures are used at runtime which can
-//    be larger to store cached information
-
-typedef int32_t TypeIndex;
-typedef int32_t TypeDefinitionIndex;
-typedef int32_t FieldIndex;
-typedef int32_t DefaultValueIndex;
-typedef int32_t DefaultValueDataIndex;
-typedef int32_t CustomAttributeIndex;
-typedef int32_t ParameterIndex;
-typedef int32_t MethodIndex;
-typedef int32_t GenericMethodIndex;
-typedef int32_t PropertyIndex;
-typedef int32_t EventIndex;
-typedef int32_t GenericContainerIndex;
-typedef int32_t GenericParameterIndex;
-typedef int16_t GenericParameterConstraintIndex;
-typedef int32_t NestedTypeIndex;
-typedef int32_t InterfacesIndex;
-typedef int32_t VTableIndex;
-typedef int32_t InterfaceOffsetIndex;
-typedef int32_t RGCTXIndex;
-typedef uint32_t StringIndex;
-typedef int32_t StringLiteralIndex;
-typedef int32_t GenericInstIndex;
-typedef int32_t ImageIndex;
-typedef int32_t AssemblyIndex;
-typedef int32_t InteropDataIndex;
-
-const TypeIndex kTypeIndexInvalid = -1;
-const TypeDefinitionIndex kTypeDefinitionIndexInvalid = -1;
-const DefaultValueDataIndex kDefaultValueIndexNull = -1;
-const CustomAttributeIndex kCustomAttributeIndexInvalid = -1;
-const EventIndex kEventIndexInvalid = -1;
-const FieldIndex kFieldIndexInvalid = -1;
-const MethodIndex kMethodIndexInvalid = -1;
-const PropertyIndex kPropertyIndexInvalid = -1;
-const GenericContainerIndex kGenericContainerIndexInvalid = -1;
-const GenericParameterIndex kGenericParameterIndexInvalid = -1;
-const RGCTXIndex kRGCTXIndexInvalid = -1;
-const StringLiteralIndex kStringLiteralIndexInvalid = -1;
-const InteropDataIndex kInteropDataIndexInvalid = -1;
-
-// Encoded index (1 bit)
-// MethodDef - 0
-// MethodSpec - 1
-// We use the top 3 bits to indicate what table to index into
-// Type              Binary            Hex
-// Il2CppClass          001               0x20000000
-// Il2CppType        010               0x40000000
-// MethodInfo        011               0x60000000
-// FieldInfo         100               0x80000000
-// StringLiteral     101               0xA0000000
-// MethodRef         110               0xC0000000
-
-typedef uint32_t EncodedMethodIndex;
-
-enum Il2CppMetadataUsage
-{
-    kIl2CppMetadataUsageInvalid,
-    kIl2CppMetadataUsageTypeInfo,
-    kIl2CppMetadataUsageIl2CppType,
-    kIl2CppMetadataUsageMethodDef,
-    kIl2CppMetadataUsageFieldInfo,
-    kIl2CppMetadataUsageStringLiteral,
-    kIl2CppMetadataUsageMethodRef,
-};
-
-#ifdef __cplusplus
-static inline Il2CppMetadataUsage GetEncodedIndexType(EncodedMethodIndex index)
-{
-    return (Il2CppMetadataUsage)((index & 0xE0000000) >> 29);
-}
-
-static inline uint32_t GetDecodedMethodIndex(EncodedMethodIndex index)
-{
-    return index & 0x1FFFFFFFU;
-}
-
-#endif
+#include "metadata-basic.h"
 
 struct Il2CppImage;
 struct Il2CppType;
@@ -170,19 +81,13 @@ typedef struct Il2CppTypeDefinition
     uint32_t token;
 } Il2CppTypeDefinition;
 
-typedef struct Il2CppFieldDefinition
+struct Il2CppFieldDefinition_v24_0
 {
     StringIndex nameIndex;
     TypeIndex typeIndex;
+    CustomAttributeIndex customAttributeIndex;
     uint32_t token;
-} Il2CppFieldDefinition;
-
-typedef struct Il2CppFieldDefaultValue
-{
-    FieldIndex fieldIndex;
-    TypeIndex typeIndex;
-    DefaultValueDataIndex dataIndex;
-} Il2CppFieldDefaultValue;
+};
 
 typedef struct Il2CppFieldMarshaledSize
 {
@@ -190,12 +95,6 @@ typedef struct Il2CppFieldMarshaledSize
     TypeIndex typeIndex;
     int32_t size;
 } Il2CppFieldMarshaledSize;
-
-typedef struct Il2CppFieldRef
-{
-    TypeIndex typeIndex;
-    FieldIndex fieldIndex; // local offset into type fields
-} Il2CppFieldRef;
 
 typedef struct Il2CppParameterDefinition
 {
@@ -230,15 +129,16 @@ typedef struct Il2CppMethodDefinition
     uint16_t parameterCount;
 } Il2CppMethodDefinition;
 
-typedef struct Il2CppEventDefinition
+struct Il2CppEventDefinition_v24_0
 {
     StringIndex nameIndex;
     TypeIndex typeIndex;
     MethodIndex add;
     MethodIndex remove;
     MethodIndex raise;
+    CustomAttributeIndex customAttributeIndex;
     uint32_t token;
-} Il2CppEventDefinition;
+};
 
 typedef struct Il2CppPropertyDefinition
 {
@@ -277,7 +177,7 @@ typedef struct Il2CppGenericMethodFunctionsDefinitions
 #define PUBLIC_KEY_BYTE_LENGTH 8
 const int kPublicKeyByteLength = PUBLIC_KEY_BYTE_LENGTH;
 
-typedef struct Il2CppAssemblyNameDefinition
+typedef struct Il2CppAssemblyNameDefinition_v24_0
 {
     StringIndex nameIndex;
     StringIndex cultureIndex;
@@ -293,7 +193,7 @@ typedef struct Il2CppAssemblyNameDefinition
     uint8_t public_key_token[PUBLIC_KEY_BYTE_LENGTH];
 } Il2CppAssemblyNameDefinition;
 
-typedef struct Il2CppImageDefinition
+struct Il2CppImageDefinition_v24_0
 {
     StringIndex nameIndex;
     AssemblyIndex assemblyIndex;
@@ -306,19 +206,16 @@ typedef struct Il2CppImageDefinition
 
     MethodIndex entryPointIndex;
     uint32_t token;
+};
 
-    CustomAttributeIndex customAttributeStart;
-    uint32_t customAttributeCount;
-} Il2CppImageDefinition;
-
-typedef struct Il2CppAssemblyDefinition
+struct Il2CppAssemblyDefinition_v24_0
 {
     ImageIndex imageIndex;
-    uint32_t token;
+    int32_t customAttributeIndex;
     int32_t referencedAssemblyStart;
     int32_t referencedAssemblyCount;
     Il2CppAssemblyNameDefinition aname;
-} Il2CppAssemblyDefinition;
+};
 
 typedef struct Il2CppMetadataUsageList
 {
@@ -352,7 +249,7 @@ typedef struct Il2CppWindowsRuntimeTypeNamePair
 } Il2CppWindowsRuntimeTypeNamePair;
 
 #pragma pack(push, p1,4)
-typedef struct Il2CppGlobalMetadataHeader
+struct Il2CppGlobalMetadataHeader_v24_0
 {
     int32_t sanity;
     int32_t version;
@@ -396,8 +293,8 @@ typedef struct Il2CppGlobalMetadataHeader
     int32_t interfaceOffsetsCount;
     int32_t typeDefinitionsOffset; // Il2CppTypeDefinition
     int32_t typeDefinitionsCount;
-    //int32_t rgctxEntriesOffset; // Il2CppRGCTXDefinition
-    //int32_t rgctxEntriesCount;
+    int32_t rgctxEntriesOffset; // Il2CppRGCTXDefinition
+    int32_t rgctxEntriesCount;
     int32_t imagesOffset; // Il2CppImageDefinition
     int32_t imagesCount;
     int32_t assembliesOffset; // Il2CppAssemblyDefinition
@@ -422,46 +319,4 @@ typedef struct Il2CppGlobalMetadataHeader
     int32_t windowsRuntimeTypeNamesSize;
     int32_t exportedTypeDefinitionsOffset; // TypeDefinitionIndex
     int32_t exportedTypeDefinitionsCount;
-} Il2CppGlobalMetadataHeader;
-#pragma pack(pop, p1)
-
-#if RUNTIME_MONO
-
-#pragma pack(push, p1,4)
-typedef struct Il2CppGlobalMonoMetadataHeader
-{
-    int32_t sanity;
-    int32_t version;
-    int32_t stringOffset; // string data for metadata
-    int32_t stringCount;
-    int32_t methodInfoMappingOffset; // hash -> MonoMethodInfo mapping
-    int32_t methodInfoMappingCount;
-    int32_t genericMethodInfoMappingOffset; // hash -> generic MonoMethodInfo mapping
-    int32_t genericMethodInfoMappingCount;
-    int32_t rgctxIndicesOffset; // runtime generic context indices
-    int32_t rgctxIndicesCount;
-    int32_t rgctxInfoOffset; // runtime generic context info
-    int32_t rgctxInfoCount;
-    int32_t monoStringOffset; // mono strings
-    int32_t monoStringCount;
-    int32_t methodMetadataOffset; // method metadata
-    int32_t methodMetadataCount;
-    int32_t genericArgumentIndicesOffset; // generic argument indices
-    int32_t genericArgumentIndicesCount;
-    int32_t typeTableOffset; // type table
-    int32_t typeTableCount;
-    int32_t fieldTableOffset; // field table
-    int32_t fieldTableCount;
-    int32_t methodIndexTableOffset; // method index table
-    int32_t methodIndexTableCount;
-    int32_t genericMethodIndexTableOffset; // generic method index table
-    int32_t genericMethodIndexTableCount;
-    int32_t metaDataUsageListsTableOffset; // meta data usage lists table
-    int32_t metaDataUsageListsTableCount;
-    int32_t metaDataUsagePairsTableOffset; // meta data usage pairs table
-    int32_t metaDataUsagePairsTableCount;
-    int32_t assemblyNameTableOffset; // assembly names
-    int32_t assemblyNameTableCount;
-} Il2CppGlobalMonoMetadataHeader;
-#pragma pack(pop, p1)
-#endif
+};

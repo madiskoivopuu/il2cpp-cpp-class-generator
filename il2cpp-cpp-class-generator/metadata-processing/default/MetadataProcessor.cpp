@@ -1,5 +1,5 @@
 #include "MetadataProcessor.h"
-#include "il2cpp-metadata.h"
+#include "il2cpp-metadata-all.h"
 
 #include <fstream>
 #include <assert.h>

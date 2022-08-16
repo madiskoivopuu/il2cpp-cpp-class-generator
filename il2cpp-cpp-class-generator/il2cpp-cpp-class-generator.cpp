@@ -4,12 +4,13 @@
 #include <iostream>
 #include <Windows.h>
 #include <commdlg.h>
-#include <winver.h>
-#pragma comment(lib,"Version.lib")
 
 #include "metadata-processing/default/MetadataProcessor.h"
 #include "metadata-processing/typeinfo.h"
+#include "metadata-processing/default/il2cpp-metadata-all.h"
+#include "UnityVersion.h"
 
+#define UNITY_VERSION_GREATER_OR_EQUAL(unityVer, _major, _minor, _build) ((unityVer.major >= _major) && (unityVer.minor >= _minor) && (unityVer.build >= _build))
 
 bool GetUserSelectedFileLoc(char* location) {
     OPENFILENAME selectedFile = { 0 };
@@ -26,34 +27,10 @@ bool GetUserSelectedFileLoc(char* location) {
     return GetOpenFileName(&selectedFile);
 }
 
-struct UnityVersion {
-    uint16_t major;
-    uint16_t minor;
-    uint16_t build;
-};
-bool GetUnityVersion(char* unityPath, UnityVersion& unityVer) {
-    int verInfoSize = GetFileVersionInfoSize(unityPath, 0);
-    if (verInfoSize == 0) return false;
-
-    BYTE* data = new BYTE[verInfoSize];
-    LPVOID queryPtr = 0;
-    unsigned int size = 0;
-    if (!GetFileVersionInfoA(unityPath, 0, verInfoSize, data)) return false;
-
-    if (!VerQueryValue(data, "\\", &queryPtr, &size)) return false;
-    if (!size) return false;
-
-    VS_FIXEDFILEINFO* fileInfo = static_cast<VS_FIXEDFILEINFO*>(queryPtr);
-    unityVer.major = HIWORD(fileInfo->dwFileVersionMS);
-    unityVer.minor = LOWORD(fileInfo->dwFileVersionMS);
-    unityVer.build = HIWORD(fileInfo->dwProductVersionLS);
-}
-
 int main()
 {
-
     char metadataLoc[MAX_PATH+FILENAME_MAX] = { 0 };
-    char unityLoc[MAX_PATH+FILENAME_MAX] = { 0 };
+    char gameManLoc[MAX_PATH+FILENAME_MAX] = { 0 };
 
     std::cout << "Choose your global-metadata.dat file..." << std::endl;
     if (!GetUserSelectedFileLoc(metadataLoc)) {
@@ -61,31 +38,51 @@ int main()
         std::cin.get();
         return 0;
     }
-    std::cout << "Choose your UnityPlayer.dll/libunity.so file..." << std::endl;
-    if (!GetUserSelectedFileLoc(unityLoc)) {
+    std::cout << "Choose your globalgamemanagers file..." << std::endl;
+    if (!GetUserSelectedFileLoc(gameManLoc)) {
         std::cout << "Selection failed, exiting..." << std::endl;
         std::cin.get();
         return 0;
     }
 
     UnityVersion version = { 0 };
-    if (!GetUnityVersion(unityLoc, version)) {
-        std::cout << "Failed to get unity version from provided dll/so." << std::endl;
+    if (!GetUnityVersion(gameManLoc, version)) {
+        std::cout << "Failed to get unity version from provided globalgamemanagers." << std::endl;
         std::cin.get();
         return 0;
     }
 
-    std::cout << version.major << std::endl;
-    std::cout << version.minor << std::endl;
-    std::cout << version.build << std::endl;
+    void* metadataBytes = LoadMetadataFile(metadataLoc);
+    if (!metadataBytes) {
+        std::cout << "Failed to load metadata file." << std::endl;
+        std::cin.get();
+        return 0;
+    }
 
-     //void* metadataBytes = LoadMetadataFile(metadataLoc);
-    // if (!metadataBytes) return 0;
+    Il2CppGlobalMetadataHeader* header = static_cast<Il2CppGlobalMetadataHeader*>(metadataBytes);
+    if (header->sanity != 0xFAB11BAF) {
+        std::cout << "Invalid sanity number for metadata file." << std::endl;
+        std::cin.get();
+        return 0;
+    }
 
-     //std::vector<Il2cppImageData> il2cppImages = ParseMetadata(metadataBytes);
+    // now we parse the metadata based on the version
+    if (header->version == 29) {
+        if (UNITY_VERSION_GREATER_OR_EQUAL(version, 2020, 2, 4)) { // v27.1
+
+        }
+    }
+    else if (header->version == 27) {
+       
+    }
+    else {
+
+    }
+
+    //std::vector<Il2cppImageData> il2cppImages = ParseMetadata(metadataBytes);
 
 
-     //free(metadataBytes);
+    //free(metadataBytes);
 
     return 0;
 }

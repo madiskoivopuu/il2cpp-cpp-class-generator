@@ -21,6 +21,9 @@
     <ClCompile Include="metadata-processing\default\MetadataProcessor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="UnityVersion.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="metadata-processing\typeinfo.h">
@@ -33,6 +36,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="metadata-processing\typeconversion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UnityVersion.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
