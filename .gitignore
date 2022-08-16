@@ -581,3 +581,4 @@ Cheat/Cheat.vcxproj.filters
 Cheat/.vs/Cheat/v17/.suo
 Cheat/.vs/Cheat/v17/Browse.VC.db
 Cheat/Cheat.vcxproj
+*.tlog
