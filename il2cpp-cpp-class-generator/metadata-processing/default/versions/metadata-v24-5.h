@@ -162,7 +162,6 @@ struct Il2CppCustomAttributeTypeRange
     int32_t count;
 };
 
-#pragma pack(push, p1,4)
 struct Il2CppGlobalMetadataHeader
 {
     int32_t sanity;

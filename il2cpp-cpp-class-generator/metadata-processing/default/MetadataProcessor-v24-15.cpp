@@ -6,5 +6,5 @@
 
 // v24_15 => 24.1 < 24.15 < 24.2
 std::vector<Il2cppImageData> ParseMetadata_v24_15(void* metadataBytes) {
-	ParseMetadata(metadataBytes);
+	return ParseMetadata(metadataBytes);
 }

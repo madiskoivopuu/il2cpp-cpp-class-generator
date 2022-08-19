@@ -1,7 +1,7 @@
 #pragma once
 #include <unordered_map>
 
-typedef enum Il2CppTypeEnum
+enum Il2CppTypeEnum
 {
     IL2CPP_TYPE_END = 0x00,       /* End of List */
     IL2CPP_TYPE_VOID = 0x01,

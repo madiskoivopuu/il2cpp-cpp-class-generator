@@ -18,21 +18,54 @@
     <ClCompile Include="il2cpp-cpp-class-generator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="metadata-processing\default\MetadataProcessor.cpp">
+    <ClCompile Include="metadata-processing\default\MetadataProcessor-v23-0.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="UnityVersion.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="metadata-processing\default\MetadataProcessor-v24-0.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="metadata-processing\default\MetadataProcessor-v24-1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="metadata-processing\default\MetadataProcessor-v24-2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="metadata-processing\default\MetadataProcessor-v24-3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="metadata-processing\default\MetadataProcessor-v24-4.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="metadata-processing\default\MetadataProcessor-v24-5.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="metadata-processing\default\MetadataProcessor-v24-15.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="metadata-processing\default\MetadataProcessor-v27-0.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="metadata-processing\default\MetadataProcessor-v27-1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="metadata-processing\default\MetadataProcessor-v27-9.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="metadata-processing\default\MetadataProcessor-v29-0.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="metadata-processing\typeinfo.h">
+    <ClInclude Include="class-generator\typeinfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="metadata-processing\default\MetadataProcessor.h">
+    <ClInclude Include="metadata-processing\default\MetadataProcessorImpl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="metadata-processing\typeconversion.h">
+    <ClInclude Include="class-generator\typeconversion.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="UnityVersion.h">
@@ -69,6 +102,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="metadata-processing\default\versions\metadata-v29-0.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="metadata-processing\default\versions\metadata-v23-0.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="metadata-processing\default\versions\metadata-v27-9.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="metadata-processing\default\MetadataProcessor-vXX-X.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

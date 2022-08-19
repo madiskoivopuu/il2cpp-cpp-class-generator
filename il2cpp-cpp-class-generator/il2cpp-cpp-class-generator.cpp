@@ -11,7 +11,6 @@
 
 #include "metadata-processing/default/versions/metadata-v24-0.h"
 #include "metadata-processing/default/MetadataProcessor-vXX-X.h"
-#include "metadata-processing/default/MetadataProcessorImpl.h"
 
 #define UNITY_VERSION_GREATER_OR_EQUAL(unityVer, _major, _minor, _build) ((unityVer.major >= _major) && (unityVer.minor >= _minor) && (unityVer.build >= _build))
 
@@ -28,6 +27,26 @@ bool GetUserSelectedFileLoc(char* location) {
     selectedFile.Flags = OFN_DONTADDTORECENT | OFN_FILEMUSTEXIST;
 
     return GetOpenFileName(&selectedFile);
+}
+
+void* LoadMetadataFile(char* filePath) {
+    std::ifstream file(filePath, std::ios_base::binary);
+
+    // get the length of file to malloc a buffer
+    file.seekg(0, std::ios::end);
+    size_t length = file.tellg();
+    file.seekg(0, std::ios::beg);
+
+    void* buffer = malloc(length);
+    file.read(static_cast<char*>(buffer), length);
+
+    if (!file) {
+        std::cout << "error: only " << file.gcount() << " could be read";
+        free(buffer);
+        return 0;
+    }
+
+    return buffer;
 }
 
 int main()

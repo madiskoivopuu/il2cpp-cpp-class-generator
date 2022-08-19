@@ -1,6 +1,6 @@
 #pragma once
 
-#include "typeconversion.h"
+#include <vector>
 
 struct FieldData {
 	char* name;

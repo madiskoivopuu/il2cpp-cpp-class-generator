@@ -5,5 +5,5 @@
 #include "MetadataProcessorImpl.h"
 
 std::vector<Il2cppImageData> ParseMetadata_v27_0(void* metadataBytes) {
-	ParseMetadata(metadataBytes);
+	return ParseMetadata(metadataBytes);
 }
