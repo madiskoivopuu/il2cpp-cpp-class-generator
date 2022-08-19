@@ -584,3 +584,11 @@ Cheat/Cheat.vcxproj
 *.tlog
 *.idb
 *.obj
+il2cpp-cpp-class-generator/x64/Debug/il2cpp-c.752f1a1a.tlog/CL.command.1.tlog
+il2cpp-cpp-class-generator/x64/Debug/il2cpp-c.752f1a1a.tlog/CL.read.1.tlog
+il2cpp-cpp-class-generator/x64/Debug/il2cpp-c.752f1a1a.tlog/link.command.1.tlog
+il2cpp-cpp-class-generator/x64/Debug/il2cpp-c.752f1a1a.tlog/link.read.1.tlog
+il2cpp-cpp-class-generator/x64/Debug/il2cpp-c.752f1a1a.tlog/link.write.1.tlog
+il2cpp-cpp-class-generator/x64/Debug/MetadataProcessor.obj
+il2cpp-cpp-class-generator/x64/Debug/vc143.idb
+il2cpp-cpp-class-generator/x64/Debug/vc143.pdb
