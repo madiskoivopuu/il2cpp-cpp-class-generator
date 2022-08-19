@@ -7,14 +7,14 @@
 #include <iostream>
 
 void ReadUnityVersionBytes(char* fileBytes, int readIndex, UnityVersion& unityVer) {
-	char numBuffer[12] = {0};
+	char numBuffer[16] = {0};
 	int currWriteIndex = 0;
 	int step = 0;
 
 	while (fileBytes[readIndex] != 0) {
-		char* current = &fileBytes[readIndex];
 		if (step > 2) break;
 
+		char* current = &fileBytes[readIndex];
 		if (*current == '.' || *current == 'f') {
 			switch (step) {
 			case 0:

@@ -29,9 +29,6 @@
     <ClInclude Include="metadata-processing\typeinfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="metadata-processing\default\il2cpp-metadata.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="metadata-processing\default\MetadataProcessor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -39,6 +36,39 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="UnityVersion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="metadata-processing\default\versions\metadata-v24-0.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="metadata-processing\default\versions\metadata-const.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="metadata-processing\default\versions\metadata-v24-1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="metadata-processing\default\versions\metadata-v24-2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="metadata-processing\default\versions\metadata-v24-3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="metadata-processing\default\versions\metadata-v24-4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="metadata-processing\default\versions\metadata-v24-5.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="metadata-processing\default\versions\metadata-v24-15.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="metadata-processing\default\versions\metadata-v27-0.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="metadata-processing\default\versions\metadata-v27-1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="metadata-processing\default\versions\metadata-v29-0.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -9,6 +9,7 @@ struct Il2CppTypeDefinition
 {
     StringIndex nameIndex;
     StringIndex namespaceIndex;
+    CustomAttributeIndex customAttributeIndex;
     TypeIndex byvalTypeIndex;
     TypeIndex byrefTypeIndex;
 
@@ -64,10 +65,11 @@ struct Il2CppParameterDefinition
 {
     StringIndex nameIndex;
     uint32_t token;
+    CustomAttributeIndex customAttributeIndex;
     TypeIndex typeIndex;
 };
 
-struct Il2CppMethodDefinition
+typedef struct Il2CppMethodDefinition
 {
     StringIndex nameIndex;
     TypeDefinitionIndex declaringType;
@@ -85,7 +87,7 @@ struct Il2CppMethodDefinition
     uint16_t iflags;
     uint16_t slot;
     uint16_t parameterCount;
-};
+} Il2CppMethodDefinition;
 
 struct Il2CppEventDefinition
 {
@@ -103,6 +105,7 @@ struct Il2CppPropertyDefinition
     MethodIndex get;
     MethodIndex set;
     uint32_t attrs;
+    CustomAttributeIndex customAttributeIndex;
     uint32_t token;
 };
 
@@ -125,7 +128,6 @@ struct Il2CppAssemblyNameDefinition
 {
     StringIndex nameIndex;
     StringIndex cultureIndex;
-    StringIndex hashValueIndex;
     StringIndex publicKeyIndex;
     uint32_t hash_alg;
     int32_t hash_len;
@@ -150,9 +152,6 @@ struct Il2CppImageDefinition
 
     MethodIndex entryPointIndex;
     uint32_t token;
-
-    int32_t customAttributeStart;
-    uint32_t customAttributeCount;
 };
 
 struct Il2CppAssemblyDefinition
@@ -222,10 +221,6 @@ struct Il2CppGlobalMetadataHeader
     int32_t imagesCount;
     int32_t assembliesOffset; // Il2CppAssemblyDefinition
     int32_t assembliesCount;
-    int32_t metadataUsageListsOffset; // Il2CppMetadataUsageList
-    int32_t metadataUsageListsCount;
-    int32_t metadataUsagePairsOffset; // Il2CppMetadataUsagePair
-    int32_t metadataUsagePairsCount;
     int32_t fieldRefsOffset; // Il2CppFieldRef
     int32_t fieldRefsCount;
     int32_t referencedAssembliesOffset; // int32_t
@@ -240,6 +235,8 @@ struct Il2CppGlobalMetadataHeader
     int32_t unresolvedVirtualCallParameterRangesCount;
     int32_t windowsRuntimeTypeNamesOffset; // Il2CppWindowsRuntimeTypeNamePair
     int32_t windowsRuntimeTypeNamesSize;
+    const char* windowsRuntimeStringsOffset;
+    int32_t windowsRuntimeStringsSize;
     int32_t exportedTypeDefinitionsOffset; // TypeDefinitionIndex
     int32_t exportedTypeDefinitionsCount;
 };

@@ -1,8 +1,10 @@
-#include "MetadataProcessor.h"
-#include "il2cpp-metadata-all.h"
+#pragma once
 
+// This is a different way from using templates to make the ParseMetadata function compatible with different metadata versions
+// Basically, you first include the metadata header for the specific version and after that you include this implementation header
+
+#include <vector>
 #include <fstream>
-#include <assert.h>
 #include <iostream>
 
 void* LoadMetadataFile(char* filePath) {
@@ -44,9 +46,8 @@ Il2CppPropertyDefinition* GetPropInfoFromIndex(Il2CppGlobalMetadataHeader* heade
 
 std::vector<Il2cppImageData> ParseMetadata(void* metadataBytes) {
 	Il2CppGlobalMetadataHeader* header = static_cast<Il2CppGlobalMetadataHeader*>(metadataBytes);
-	assert(header->sanity == 0xFAB11BAF);
-	
-	std::vector<Il2cppImageData> allAssemblies;
+
+	std::vector<Il2cppImageData> allImages;
 
 	// parse classes, their fields props methods etc from images
 	Il2CppImageDefinition* imageDefStart = (Il2CppImageDefinition*)((const char*)header + header->assembliesOffset);
@@ -58,8 +59,8 @@ std::vector<Il2cppImageData> ParseMetadata(void* metadataBytes) {
 		imgData.name = GetStringFromIndex(header, image->nameIndex);
 		std::cout << imgData.name << std::endl;
 
-		allAssemblies.push_back(imgData);
+		allImages.push_back(imgData);
 	}
 
-	return allAssemblies;
+	return allImages;
 }

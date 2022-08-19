@@ -85,5 +85,96 @@ static inline uint32_t GetDecodedMethodIndex(EncodedMethodIndex index)
 {
     return index & 0x1FFFFFFFU;
 }
-
 #endif
+
+struct Il2CppMethodSpec
+{
+    MethodIndex methodDefinitionIndex;
+    GenericInstIndex classIndexIndex;
+    GenericInstIndex methodIndexIndex;
+};
+
+typedef union Il2CppRGCTXDefinitionData
+{
+    int32_t rgctxDataDummy;
+    MethodIndex methodIndex;
+    TypeIndex typeIndex;
+} Il2CppRGCTXDefinitionData;
+
+enum Il2CppRGCTXDataType
+{
+    IL2CPP_RGCTX_DATA_INVALID,
+    IL2CPP_RGCTX_DATA_TYPE,
+    IL2CPP_RGCTX_DATA_CLASS,
+    IL2CPP_RGCTX_DATA_METHOD,
+    IL2CPP_RGCTX_DATA_ARRAY,
+};
+
+struct Il2CppRGCTXDefinition
+{
+    Il2CppRGCTXDataType type;
+    Il2CppRGCTXDefinitionData data;
+};
+
+struct Il2CppFieldMarshaledSize
+{
+    FieldIndex fieldIndex;
+    TypeIndex typeIndex;
+    int32_t size;
+};
+
+struct Il2CppFieldDefaultValue
+{
+    FieldIndex fieldIndex;
+    TypeIndex typeIndex;
+    DefaultValueDataIndex dataIndex;
+};
+
+struct Il2CppFieldRef
+{
+    TypeIndex typeIndex;
+    FieldIndex fieldIndex; // local offset into type fields
+};
+
+struct Il2CppMetadataUsageList
+{
+    uint32_t start;
+    uint32_t count;
+};
+
+struct Il2CppMetadataUsagePair
+{
+    uint32_t destinationIndex;
+    uint32_t encodedSourceIndex;
+};
+
+struct Il2CppParameterDefaultValue
+{
+    ParameterIndex parameterIndex;
+    TypeIndex typeIndex;
+    DefaultValueDataIndex dataIndex;
+};
+
+struct Il2CppStringLiteral
+{
+    uint32_t length;
+    StringLiteralIndex dataIndex;
+};
+
+struct Il2CppInterfaceOffsetPair
+{
+    TypeIndex interfaceTypeIndex;
+    int32_t offset;
+};
+
+typedef struct Il2CppRange
+{
+    int32_t start;
+    int32_t length;
+} Il2CppRange;
+
+typedef struct Il2CppWindowsRuntimeTypeNamePair
+{
+    StringIndex nameIndex;
+    TypeIndex typeIndex;
+} Il2CppWindowsRuntimeTypeNamePair;
