@@ -5,7 +5,7 @@ struct Il2CppImage;
 struct Il2CppType;
 struct Il2CppTypeDefinitionMetadata;
 
-struct Il2CppTypeDefinition
+struct Il2CppTypeDefinition_v27_1
 {
     StringIndex nameIndex;
     StringIndex namespaceIndex;
@@ -49,21 +49,21 @@ struct Il2CppTypeDefinition
     uint32_t token;
 };
 
-struct Il2CppFieldDefinition
+struct Il2CppFieldDefinition_v27_1
 {
     StringIndex nameIndex;
     TypeIndex typeIndex;
     uint32_t token;
 };
 
-struct Il2CppParameterDefinition
+struct Il2CppParameterDefinition_v27_1
 {
     StringIndex nameIndex;
     uint32_t token;
     TypeIndex typeIndex;
 };
 
-struct Il2CppMethodDefinition
+struct Il2CppMethodDefinition_v27_1
 {
     StringIndex nameIndex;
     TypeDefinitionIndex declaringType;
@@ -78,7 +78,7 @@ struct Il2CppMethodDefinition
     uint16_t parameterCount;
 };
 
-struct Il2CppEventDefinition
+struct Il2CppEventDefinition_v27_1
 {
     StringIndex nameIndex;
     TypeIndex typeIndex;
@@ -88,7 +88,7 @@ struct Il2CppEventDefinition
     uint32_t token;
 };
 
-struct Il2CppPropertyDefinition
+struct Il2CppPropertyDefinition_v27_1
 {
     StringIndex nameIndex;
     MethodIndex get;
@@ -97,22 +97,7 @@ struct Il2CppPropertyDefinition
     uint32_t token;
 };
 
-typedef struct
-{
-    MethodIndex methodIndex;
-    MethodIndex invokerIndex;
-} Il2CppGenericMethodIndices;
-
-typedef struct Il2CppGenericMethodFunctionsDefinitions
-{
-    GenericMethodIndex genericMethodIndex;
-    Il2CppGenericMethodIndices indices;
-} Il2CppGenericMethodFunctionsDefinitions;
-
-#define PUBLIC_KEY_BYTE_LENGTH 8
-const int kPublicKeyByteLength = PUBLIC_KEY_BYTE_LENGTH;
-
-struct Il2CppAssemblyNameDefinition
+struct Il2CppAssemblyNameDefinition_v27_1
 {
     StringIndex nameIndex;
     StringIndex cultureIndex;
@@ -127,7 +112,7 @@ struct Il2CppAssemblyNameDefinition
     uint8_t public_key_token[PUBLIC_KEY_BYTE_LENGTH];
 };
 
-struct Il2CppImageDefinition
+struct Il2CppImageDefinition_v27_1
 {
     StringIndex nameIndex;
     AssemblyIndex assemblyIndex;
@@ -145,23 +130,23 @@ struct Il2CppImageDefinition
     uint32_t customAttributeCount;
 };
 
-struct Il2CppAssemblyDefinition
+struct Il2CppAssemblyDefinition_v27_1
 {
     ImageIndex imageIndex;
     uint32_t token;
     int32_t referencedAssemblyStart;
     int32_t referencedAssemblyCount;
-    Il2CppAssemblyNameDefinition aname;
+    Il2CppAssemblyNameDefinition_v27_1 aname;
 };
 
-struct Il2CppCustomAttributeTypeRange
+struct Il2CppCustomAttributeTypeRange_v27_1
 {
     uint32_t token;
     int32_t start;
     int32_t count;
 };
 
-struct Il2CppGlobalMetadataHeader
+struct Il2CppGlobalMetadataHeader_v27_1
 {
     int32_t sanity;
     int32_t version;

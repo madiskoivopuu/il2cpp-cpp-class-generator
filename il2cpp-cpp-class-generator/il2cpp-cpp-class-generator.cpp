@@ -9,8 +9,19 @@
 #include "class-generator/typeinfo.h"
 #include "UnityVersion.h"
 
+#include "metadata-processing/default/versions/metadata-v23-0.h"
 #include "metadata-processing/default/versions/metadata-v24-0.h"
-#include "metadata-processing/default/MetadataProcessor-vXX-X.h"
+#include "metadata-processing/default/versions/metadata-v24-1.h"
+#include "metadata-processing/default/versions/metadata-v24-15.h"
+#include "metadata-processing/default/versions/metadata-v24-2.h"
+#include "metadata-processing/default/versions/metadata-v24-3.h"
+#include "metadata-processing/default/versions/metadata-v24-4.h"
+#include "metadata-processing/default/versions/metadata-v24-5.h"
+#include "metadata-processing/default/versions/metadata-v27-0.h"
+#include "metadata-processing/default/versions/metadata-v27-1.h"
+#include "metadata-processing/default/versions/metadata-v27-9.h"
+#include "metadata-processing/default/versions/metadata-v29-0.h"
+#include "metadata-processing/default/MetadataProcessorImpl.h"
 
 #define UNITY_VERSION_GREATER_OR_EQUAL(unityVer, _major, _minor, _build) ((unityVer.major >= _major) && (unityVer.minor >= _minor) && (unityVer.build >= _build))
 
@@ -82,7 +93,7 @@ int main()
         return 0;
     }
 
-    Il2CppGlobalMetadataHeader* header = static_cast<Il2CppGlobalMetadataHeader*>(metadataBytes);
+    Il2CppGlobalMetadataHeader_v24_0* header = static_cast<Il2CppGlobalMetadataHeader_v24_0*>(metadataBytes);
     if (header->sanity != 0xFAB11BAF) {
         std::cout << "Invalid sanity number for metadata file." << std::endl;
         std::cin.get();
@@ -96,61 +107,78 @@ int main()
             std::cout << "Metadata v29.1 parsing not implemented yet" << std::endl;
             return 0;
         }
-        ParseMetadata_v29_0(metadataBytes);
+        ParseMetadata<Il2CppGlobalMetadataHeader_v29_0, 
+                        Il2CppImageDefinition_v29_0>(metadataBytes);
         break;
     
     case 28:
-        ParseMetadata_v27_9(metadataBytes);
+        ParseMetadata<Il2CppGlobalMetadataHeader_v27_9,
+            Il2CppImageDefinition_v27_9>(metadataBytes);
         break;
     case 27:
-        if (UNITY_VERSION_GREATER_OR_EQUAL(version, 2022, 2, 4)) {
-            ParseMetadata_v27_1(metadataBytes);
+        if (UNITY_VERSION_GREATER_OR_EQUAL(version, 2022, 2, 4)) { // v27.1
+            ParseMetadata<Il2CppGlobalMetadataHeader_v27_1,
+                Il2CppImageDefinition_v27_1>(metadataBytes);
         }
-        else {
-            ParseMetadata_v27_0(metadataBytes);
+        else { // v27.0
+            ParseMetadata<Il2CppGlobalMetadataHeader_v27_0,
+                Il2CppImageDefinition_v27_0>(metadataBytes);
         }
         break;
         // v27.9??
     case 26: 
     case 25:
-        ParseMetadata_v24_5(metadataBytes);
+        ParseMetadata<Il2CppGlobalMetadataHeader_v24_5,
+            Il2CppImageDefinition_v24_5>(metadataBytes);
         break;
     case 24:
-        if (UNITY_VERSION_GREATER_OR_EQUAL(version, 2020, 1, 11)) {
-            ParseMetadata_v24_4(metadataBytes);
+        if (UNITY_VERSION_GREATER_OR_EQUAL(version, 2020, 1, 11)) { // v24.4
+            ParseMetadata<Il2CppGlobalMetadataHeader_v24_4,
+                Il2CppImageDefinition_v24_4>(metadataBytes);
         }
-        else if (UNITY_VERSION_GREATER_OR_EQUAL(version, 2020, 0, 0)) {
-            ParseMetadata_v24_3(metadataBytes);
+        else if (UNITY_VERSION_GREATER_OR_EQUAL(version, 2020, 0, 0)) { // v24.3
+            ParseMetadata<Il2CppGlobalMetadataHeader_v24_3,
+                Il2CppImageDefinition_v24_3>(metadataBytes);
         }
-        else if (UNITY_VERSION_GREATER_OR_EQUAL(version, 2019, 4, 21)) {
-            ParseMetadata_v24_5(metadataBytes);
+        else if (UNITY_VERSION_GREATER_OR_EQUAL(version, 2019, 4, 21)) { // v24.5
+            ParseMetadata<Il2CppGlobalMetadataHeader_v24_5,
+                Il2CppImageDefinition_v24_5>(metadataBytes);
         }
-        else if (UNITY_VERSION_GREATER_OR_EQUAL(version, 2019, 4, 15)) {
-            ParseMetadata_v24_4(metadataBytes);
+        else if (UNITY_VERSION_GREATER_OR_EQUAL(version, 2019, 4, 15)) { // v24.4
+            ParseMetadata<Il2CppGlobalMetadataHeader_v24_4,
+                Il2CppImageDefinition_v24_4>(metadataBytes);
         }
-        else if (UNITY_VERSION_GREATER_OR_EQUAL(version, 2019, 3, 7)) {
-            ParseMetadata_v24_3(metadataBytes);
+        else if (UNITY_VERSION_GREATER_OR_EQUAL(version, 2019, 3, 7)) { // v24.3
+            ParseMetadata<Il2CppGlobalMetadataHeader_v24_3,
+                Il2CppImageDefinition_v24_3>(metadataBytes);
         }
-        else if (UNITY_VERSION_GREATER_OR_EQUAL(version, 2019, 0, 0)) {
-            ParseMetadata_v24_2(metadataBytes);
+        else if (UNITY_VERSION_GREATER_OR_EQUAL(version, 2019, 0, 0)) { // v24.2
+            ParseMetadata<Il2CppGlobalMetadataHeader_v24_2,
+                Il2CppImageDefinition_v24_2>(metadataBytes);
         }
-        else if (UNITY_VERSION_GREATER_OR_EQUAL(version, 2018, 4, 34)) {
-            ParseMetadata_v24_15(metadataBytes);
+        else if (UNITY_VERSION_GREATER_OR_EQUAL(version, 2018, 4, 34)) { // v24.15
+            ParseMetadata<Il2CppGlobalMetadataHeader_v24_15,
+                Il2CppImageDefinition_v24_15>(metadataBytes);
         }
-        else if (UNITY_VERSION_GREATER_OR_EQUAL(version, 2018, 3, 0)) {
-            ParseMetadata_v24_1(metadataBytes);
+        else if (UNITY_VERSION_GREATER_OR_EQUAL(version, 2018, 3, 0)) { // v24.1
+            ParseMetadata<Il2CppGlobalMetadataHeader_v24_1,
+                Il2CppImageDefinition_v24_1>(metadataBytes);
         }
-        else {
-            ParseMetadata_v24_0(metadataBytes);
+        else { // v24
+            ParseMetadata<Il2CppGlobalMetadataHeader_v24_0,
+                Il2CppImageDefinition_v24_0>(metadataBytes);
         }
         break;
+    case 23:
+        ParseMetadata<Il2CppGlobalMetadataHeader_v24_0,
+            Il2CppImageDefinition_v24_0>(metadataBytes);
+        break;
+    default:
+        std::cout << "Unsupported metadata version " << header->version << std::endl;
+        return 0;
     }
 
-    //std::vector<Il2cppImageData> il2cppImages = ParseMetadata(metadataBytes);
-
-
-    //free(metadataBytes);
-
+    free(metadataBytes);
     return 0;
 }
 

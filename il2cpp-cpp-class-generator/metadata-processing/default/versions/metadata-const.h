@@ -50,6 +50,9 @@ const RGCTXIndex kRGCTXIndexInvalid = -1;
 const StringLiteralIndex kStringLiteralIndexInvalid = -1;
 const InteropDataIndex kInteropDataIndexInvalid = -1;
 
+#define PUBLIC_KEY_BYTE_LENGTH 8
+const int kPublicKeyByteLength = PUBLIC_KEY_BYTE_LENGTH;
+
 // Encoded index (1 bit)
 // MethodDef - 0
 // MethodSpec - 1
@@ -86,6 +89,18 @@ static inline uint32_t GetDecodedMethodIndex(EncodedMethodIndex index)
     return index & 0x1FFFFFFFU;
 }
 #endif
+
+struct Il2CppGenericMethodIndices
+{
+    MethodIndex methodIndex;
+    MethodIndex invokerIndex;
+};
+
+struct Il2CppGenericMethodFunctionsDefinitions
+{
+    GenericMethodIndex genericMethodIndex;
+    Il2CppGenericMethodIndices indices;
+};
 
 struct Il2CppMethodSpec
 {

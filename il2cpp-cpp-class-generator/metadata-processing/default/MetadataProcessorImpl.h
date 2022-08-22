@@ -1,39 +1,42 @@
 #pragma once
-
-// This is a different way from using templates to make the ParseMetadata function compatible with different metadata versions
-// Basically, you first include the metadata header for the specific version and after that you include this implementation header
+#include "../../class-generator/typeinfo.h"
 
 #include <vector>
-#include <fstream>
-#include <iostream>
 
-inline char* GetStringFromIndex(Il2CppGlobalMetadataHeader* header, int index) {
+// Function declarations for different metadata versions
+template<typename THeader>
+char* GetStringFromIndex(THeader* header, int index) {
 	char* strings = ((char*)header + header->stringOffset) + index;
 	return strings;
 }
 
-inline Il2CppImageDefinition* GetImageFromIndex(Il2CppGlobalMetadataHeader* header, int index) {
-	return reinterpret_cast<Il2CppImageDefinition*>(header + header->imagesOffset) + index;
+template<typename THeader, typename TImgDef>
+TImgDef* GetImageFromIndex(THeader* header, int index) {
+	return reinterpret_cast<TImgDef*>(header + header->imagesOffset) + index;
 }
 
-inline Il2CppFieldDefinition* GetFieldInfoFromIndex(Il2CppGlobalMetadataHeader* header, int index) {
-	return reinterpret_cast<Il2CppFieldDefinition*>(header + header->fieldsOffset) + index;
+
+template<typename THeader, typename TFieldDef>
+TFieldDef* GetFieldInfoFromIndex(THeader* header, int index) {
+	return reinterpret_cast<TFieldDef*>(header + header->fieldsOffset) + index;
 }
 
-inline Il2CppPropertyDefinition* GetPropInfoFromIndex(Il2CppGlobalMetadataHeader* header, int index) {
-	return reinterpret_cast<Il2CppPropertyDefinition*>(header + header->propertiesOffset) + index;
+template<typename THeader, typename TPropDef>
+TPropDef* GetPropInfoFromIndex(THeader* header, int index) {
+	return reinterpret_cast<TPropDef*>(header + header->propertiesOffset) + index;
 }
 
-inline std::vector<Il2cppImageData> ParseMetadata(void* metadataBytes) {
-	Il2CppGlobalMetadataHeader* header = static_cast<Il2CppGlobalMetadataHeader*>(metadataBytes);
+template<typename THeader, typename TImgDef>
+std::vector<Il2cppImageData> ParseMetadata(void* metadataBytes) {
+	THeader* header = static_cast<THeader*>(metadataBytes);
 
 	std::vector<Il2cppImageData> allImages;
 
 	// parse classes, their fields props methods etc from images
-	Il2CppImageDefinition* imageDefStart = (Il2CppImageDefinition*)((const char*)header + header->assembliesOffset);
-	int imageCount = header->imagesCount / sizeof(Il2CppImageDefinition);
+	TImgDef* imageDefStart = (TImgDef*)((const char*)header + header->imagesOffset);
+	int imageCount = header->imagesCount / sizeof(TImgDef);
 	for (int imgIdx = 0; imgIdx < imageCount; imgIdx++) {
-		Il2CppImageDefinition* image = imageDefStart + imgIdx;
+		TImgDef* image = imageDefStart + imgIdx;
 
 		Il2cppImageData imgData;
 		imgData.name = GetStringFromIndex(header, image->nameIndex);

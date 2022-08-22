@@ -129,22 +129,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="il2cpp-cpp-class-generator.cpp" />
-    <ClCompile Include="metadata-processing\default\MetadataProcessor-v23-0.cpp" />
-    <ClCompile Include="metadata-processing\default\MetadataProcessor-v24-0.cpp" />
-    <ClCompile Include="metadata-processing\default\MetadataProcessor-v24-1.cpp" />
-    <ClCompile Include="metadata-processing\default\MetadataProcessor-v24-15.cpp" />
-    <ClCompile Include="metadata-processing\default\MetadataProcessor-v24-2.cpp" />
-    <ClCompile Include="metadata-processing\default\MetadataProcessor-v24-3.cpp" />
-    <ClCompile Include="metadata-processing\default\MetadataProcessor-v24-4.cpp" />
-    <ClCompile Include="metadata-processing\default\MetadataProcessor-v24-5.cpp" />
-    <ClCompile Include="metadata-processing\default\MetadataProcessor-v27-0.cpp" />
-    <ClCompile Include="metadata-processing\default\MetadataProcessor-v27-1.cpp" />
-    <ClCompile Include="metadata-processing\default\MetadataProcessor-v27-9.cpp" />
-    <ClCompile Include="metadata-processing\default\MetadataProcessor-v29-0.cpp" />
     <ClCompile Include="UnityVersion.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="metadata-processing\default\MetadataProcessorImpl.h" />
     <ClInclude Include="metadata-processing\default\versions\metadata-const.h" />
     <ClInclude Include="metadata-processing\default\versions\metadata-v23-0.h" />
     <ClInclude Include="metadata-processing\default\versions\metadata-v24-0.h" />
@@ -160,7 +147,7 @@
     <ClInclude Include="metadata-processing\default\versions\metadata-v29-0.h" />
     <ClInclude Include="class-generator\typeconversion.h" />
     <ClInclude Include="class-generator\typeinfo.h" />
-    <ClInclude Include="metadata-processing\default\MetadataProcessor-vXX-X.h" />
+    <ClInclude Include="metadata-processing\default\MetadataProcessorImpl.h" />
     <ClInclude Include="UnityVersion.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
