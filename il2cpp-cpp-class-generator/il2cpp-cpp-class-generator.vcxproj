@@ -128,27 +128,32 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="utils\FileHelper.cpp" />
     <ClCompile Include="il2cpp-cpp-class-generator.cpp" />
-    <ClCompile Include="UnityVersion.cpp" />
+    <ClCompile Include="metadata-processing\default\metadata-registration\MetadataRegistration.cpp" />
+    <ClCompile Include="utils\UnityVersion.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="metadata-processing\default\versions\metadata-const.h" />
-    <ClInclude Include="metadata-processing\default\versions\metadata-v23-0.h" />
-    <ClInclude Include="metadata-processing\default\versions\metadata-v24-0.h" />
-    <ClInclude Include="metadata-processing\default\versions\metadata-v24-1.h" />
-    <ClInclude Include="metadata-processing\default\versions\metadata-v24-15.h" />
-    <ClInclude Include="metadata-processing\default\versions\metadata-v24-2.h" />
-    <ClInclude Include="metadata-processing\default\versions\metadata-v24-3.h" />
-    <ClInclude Include="metadata-processing\default\versions\metadata-v24-4.h" />
-    <ClInclude Include="metadata-processing\default\versions\metadata-v24-5.h" />
-    <ClInclude Include="metadata-processing\default\versions\metadata-v27-0.h" />
-    <ClInclude Include="metadata-processing\default\versions\metadata-v27-1.h" />
-    <ClInclude Include="metadata-processing\default\versions\metadata-v27-9.h" />
-    <ClInclude Include="metadata-processing\default\versions\metadata-v29-0.h" />
+    <ClInclude Include="utils\FileHelper.h" />
+    <ClInclude Include="metadata-processing\default\metadata-file\il2cpp-tabledefs.h" />
+    <ClInclude Include="metadata-processing\default\metadata-file\versions\metadata-const.h" />
+    <ClInclude Include="metadata-processing\default\metadata-file\versions\metadata-v23-0.h" />
+    <ClInclude Include="metadata-processing\default\metadata-file\versions\metadata-v24-0.h" />
+    <ClInclude Include="metadata-processing\default\metadata-file\versions\metadata-v24-1.h" />
+    <ClInclude Include="metadata-processing\default\metadata-file\versions\metadata-v24-15.h" />
+    <ClInclude Include="metadata-processing\default\metadata-file\versions\metadata-v24-2.h" />
+    <ClInclude Include="metadata-processing\default\metadata-file\versions\metadata-v24-3.h" />
+    <ClInclude Include="metadata-processing\default\metadata-file\versions\metadata-v24-4.h" />
+    <ClInclude Include="metadata-processing\default\metadata-file\versions\metadata-v24-5.h" />
+    <ClInclude Include="metadata-processing\default\metadata-file\versions\metadata-v27-0.h" />
+    <ClInclude Include="metadata-processing\default\metadata-file\versions\metadata-v27-1.h" />
+    <ClInclude Include="metadata-processing\default\metadata-file\versions\metadata-v27-9.h" />
+    <ClInclude Include="metadata-processing\default\metadata-file\versions\metadata-v29-0.h" />
     <ClInclude Include="class-generator\typeconversion.h" />
     <ClInclude Include="class-generator\typeinfo.h" />
-    <ClInclude Include="metadata-processing\default\MetadataProcessorImpl.h" />
-    <ClInclude Include="UnityVersion.h" />
+    <ClInclude Include="metadata-processing\default\metadata-file\MetadataProcessorImpl.h" />
+    <ClInclude Include="metadata-processing\default\metadata-registration\MetadataRegistration.h" />
+    <ClInclude Include="utils\UnityVersion.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
