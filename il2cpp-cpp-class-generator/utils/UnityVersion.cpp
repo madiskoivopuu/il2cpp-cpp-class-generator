@@ -4,6 +4,7 @@
 #include <fstream>
 #pragma comment(lib,"Version.lib")
 #include <iostream>
+#include <vector>
 
 #include "../metadata-processing/default/metadata-file/versions/metadata-v24-0.h"
 
@@ -63,8 +64,8 @@ bool GetUnityVersion(char* gameManPath, UnityVersion& unityVer) {
 	return true;
 }
 
-float MetadataVersionFromUnity(void* metadataBytes, UnityVersion unityVer) {
-    Il2CppGlobalMetadataHeader_v24_0* header = static_cast<Il2CppGlobalMetadataHeader_v24_0*>(metadataBytes);
+float MetadataVersionFromUnity(std::vector<BYTE> metadataBytes, UnityVersion unityVer) {
+    Il2CppGlobalMetadataHeader_v24_0* header = reinterpret_cast<Il2CppGlobalMetadataHeader_v24_0*>(metadataBytes.data());
     switch (header->version) {
     case 29:
         if (UNITY_VERSION_GREATER_OR_EQUAL(unityVer, 2022, 1, 1)) { // v29.1 was more specifically added in a beta version 

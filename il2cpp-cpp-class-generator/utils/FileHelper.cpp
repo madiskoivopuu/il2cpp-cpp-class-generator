@@ -1,15 +1,33 @@
 #include "FileHelper.h"
 
+#include <cstdint>
 #include <fstream>
+#include <vector>
 #include <Windows.h>
 
-FileInformation GetFileInfoFromFileBytes(char* fileBytes) {
+FileInformation GetFileInfoFromFileBytes(std::vector<BYTE> fileBuffer) {
     FileInformation info = { FileType::UNKNOWN, FileArch::UNKNOWN };
-    if (!fileBytes) return info;
+    if (!fileBuffer.size()) return info;
 
+    BYTE* fileBytes = fileBuffer.data();
     unsigned int fileMagicNr = static_cast<unsigned int>(*fileBytes);
     if (fileMagicNr == 0x4D5Au) { // PE
         info.format = FileType::PE; 
+        // PE files keep an offset to the signature at offset 0x3c
+        // after the signature the first 2 bytes signify the machine type
+        unsigned int offset = static_cast<unsigned int>(*(fileBytes + 0x3c));
+        uint16_t machineType = static_cast<uint16_t>(*(fileBytes + offset + 0x4));
+        switch (machineType) {
+        case IMAGE_FILE_MACHINE_AMD64:
+        case IMAGE_FILE_MACHINE_ARM64:
+        case IMAGE_FILE_MACHINE_IA64:
+            info.arch = FileArch::B64;
+            break;
+
+        default:
+            info.arch = FileArch::B32;
+            break;
+        }
     }
     else if(fileMagicNr == 0x7F454C46u) {
         info.format = FileType::ELF;
@@ -26,28 +44,15 @@ FileInformation GetFileInfoFromFileBytes(char* fileBytes) {
 }
 
 FileInformation GetFileInfo(char* filePath) {
-    void* buf = LoadFileAsBinary(filePath);
-    FileInformation info = GetFileInfoFromFileBytes(static_cast<char*>(buf));
-    free(buf);
+    std::vector<BYTE> buf = LoadFileAsBinary(filePath);
+    FileInformation info = GetFileInfoFromFileBytes(buf);
 
     return info;
 }
 
-void* LoadFileAsBinary(char* filePath) {
-    std::ifstream file(filePath, std::ios_base::binary);
+std::vector<BYTE> LoadFileAsBinary(char* filePath) {
+    std::basic_ifstream<BYTE> file(filePath, std::ios::binary);
 
-    // get the length of file to malloc a buffer
-    file.seekg(0, std::ios::end);
-    size_t length = file.tellg();
-    file.seekg(0, std::ios::beg);
-
-    void* buffer = malloc(length);
-    file.read(static_cast<char*>(buffer), length);
-
-    if (!file) {
-        free(buffer);
-        throw std::exception("Failed to fully load file as binary");
-    }
-
-    return buffer;
+    return std::vector<BYTE>((std::istreambuf_iterator<BYTE>(file)),
+        std::istreambuf_iterator<BYTE>());
 }

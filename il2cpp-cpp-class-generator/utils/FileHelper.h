@@ -20,5 +20,5 @@ struct FileInformation {
 
 FileInformation GetFileInfoFromFileBytes(char* fileBytes);
 FileInformation GetFileInfo(char* filePath);
-void* LoadFileAsBinary(char* filePath);
+std::vector<BYTE> LoadFileAsBinary(char* filePath);
 

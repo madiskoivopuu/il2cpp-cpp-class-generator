@@ -19,6 +19,8 @@
 #include "metadata-processing/default/metadata-file/versions/metadata-v29-0.h"
 #include "metadata-processing/default/metadata-file/MetadataProcessorImpl.h"
 
+#include "metadata-processing/default/metadata-registration/MetadataRegistration.h"
+
 #include "class-generator/typeinfo.h"
 #include "utils/UnityVersion.h"
 #include "utils/FileHelper.h"
@@ -41,10 +43,17 @@ bool GetUserSelectedFileLoc(char* location) {
 int main()
 {
     char metadataLoc[MAX_PATH+FILENAME_MAX] = { 0 };
+    char il2cppLoc[MAX_PATH + FILENAME_MAX] = { 0 };
     char gameManLoc[MAX_PATH+FILENAME_MAX] = { 0 };
 
     std::cout << "Choose your global-metadata.dat file..." << std::endl;
     if (!GetUserSelectedFileLoc(metadataLoc)) {
+        std::cout << "Selection failed, exiting..." << std::endl;
+        std::cin.get();
+        return 0;
+    }
+    std::cout << "Choose your GameAssembly.dll/libil2cpp.so file..." << std::endl;
+    if (!GetUserSelectedFileLoc(il2cppLoc)) {
         std::cout << "Selection failed, exiting..." << std::endl;
         std::cin.get();
         return 0;
@@ -64,16 +73,31 @@ int main()
     }
 
     // Load the metadata bytes into memory to get the main version
-    void* metadataBytes = LoadFileAsBinary(metadataLoc);
-    if (!metadataBytes) {
+    std::vector<BYTE> metadataBytes = LoadFileAsBinary(metadataLoc);
+    if (!metadataBytes.size()) {
         std::cout << "Failed to load metadata file." << std::endl;
         std::cin.get();
         return 0;
     }
 
-    Il2CppGlobalMetadataHeader_v24_0* header = static_cast<Il2CppGlobalMetadataHeader_v24_0*>(metadataBytes);
+    Il2CppGlobalMetadataHeader_v24_0* header = reinterpret_cast<Il2CppGlobalMetadataHeader_v24_0*>(metadataBytes.data());
     if (header->sanity != 0xFAB11BAF) {
         std::cout << "Invalid sanity number for metadata file." << std::endl;
+        std::cin.get();
+        return 0;
+    }
+
+    // Load il2cpp dll/so and get the metadata registration from there
+    std::vector<BYTE> il2cppBytes = LoadFileAsBinary(il2cppLoc);
+    if (!metadataBytes.size()) {
+        std::cout << "Failed to load GameAssembly/il2cpp file." << std::endl;
+        std::cin.get();
+        return 0;
+    }
+
+    Il2CppMetadataRegistration_B64* pMetadataRegistration = GetMedatataRegistrationPtr(il2cppBytes, MetadataVersionFromUnity(metadataBytes, version));
+    if(!pMetadataRegistration) {
+        std::cout << "Couldn't find the pointer to metadata registration inside GameAssembly.dll/libil2cpp.so." << std::endl;
         std::cin.get();
         return 0;
     }
@@ -172,7 +196,7 @@ int main()
         return 0;
     }
 
-    free(metadataBytes);
+    delete[] metadataBytes;
     return 0;
 }
 

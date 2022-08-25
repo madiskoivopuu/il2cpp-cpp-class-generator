@@ -43,8 +43,8 @@ char* ReplaceInvalidCharacters(char* string) {
 }
 
 template<typename THeader, typename TImgDef, typename TTypeDef>
-std::vector<Il2cppImageData> ParseMetadata(void* metadataBytes) {
-	THeader* header = static_cast<THeader*>(metadataBytes);
+std::vector<Il2cppImageData> ParseMetadata(std::vector<BYTE> metadataBytes) {
+	THeader* header = reinterpret_cast<THeader*>(metadataBytes.data());
 
 	std::vector<Il2cppImageData> allImages;
 
