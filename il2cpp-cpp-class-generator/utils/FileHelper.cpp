@@ -10,13 +10,14 @@ FileInformation GetFileInfoFromFileBytes(std::vector<BYTE> fileBuffer) {
     if (!fileBuffer.size()) return info;
 
     BYTE* fileBytes = fileBuffer.data();
-    unsigned int fileMagicNr = static_cast<unsigned int>(*fileBytes);
-    if (fileMagicNr == 0x4D5Au) { // PE
+
+    // file magic number checks
+    if (fileBuffer[0] == 0x4D && fileBuffer[1] == 0x5A) { // PE
         info.format = FileType::PE; 
         // PE files keep an offset to the signature at offset 0x3c
         // after the signature the first 2 bytes signify the machine type
-        unsigned int offset = static_cast<unsigned int>(*(fileBytes + 0x3c));
-        uint16_t machineType = static_cast<uint16_t>(*(fileBytes + offset + 0x4));
+        unsigned int offset = *reinterpret_cast<unsigned int*>(fileBytes + 0x3c);
+        uint16_t machineType = *reinterpret_cast<uint16_t*>(fileBytes + offset + 0x4);
         switch (machineType) {
         case IMAGE_FILE_MACHINE_AMD64:
         case IMAGE_FILE_MACHINE_ARM64:
@@ -29,7 +30,7 @@ FileInformation GetFileInfoFromFileBytes(std::vector<BYTE> fileBuffer) {
             break;
         }
     }
-    else if(fileMagicNr == 0x7F454C46u) {
+    else if(fileBuffer[0] == 0x7F && fileBuffer[1] == 0x45 && fileBuffer[2] == 0x4C && fileBuffer[3] == 0x46) { // ELF
         info.format = FileType::ELF;
         uint8_t is32or64bit = static_cast<uint8_t>(*(fileBytes+0x4));
         if (is32or64bit == 1) {
@@ -38,6 +39,7 @@ FileInformation GetFileInfoFromFileBytes(std::vector<BYTE> fileBuffer) {
         else if (is32or64bit == 2) {
             info.arch = FileArch::B64;
         }
+        else throw std::exception("Could not correctly determine whether ELF is 32/64 bit binary.");
     }
 
     return info;
@@ -51,8 +53,20 @@ FileInformation GetFileInfo(char* filePath) {
 }
 
 std::vector<BYTE> LoadFileAsBinary(char* filePath) {
-    std::basic_ifstream<BYTE> file(filePath, std::ios::binary);
+    std::ifstream file(filePath, std::ios::binary);
+    // Stop eating new lines in binary mode!!!
+    file.unsetf(std::ios::skipws);
 
-    return std::vector<BYTE>((std::istreambuf_iterator<BYTE>(file)),
-        std::istreambuf_iterator<BYTE>());
+    file.seekg(0, std::ios::end);
+    size_t fileSize = file.tellg();
+    file.seekg(0, std::ios::beg);
+
+    // reserve enough memory to read all bytes to vector
+    std::vector<BYTE> fileBytes;
+    fileBytes.resize(fileSize);
+
+    file.read(reinterpret_cast<char*>(fileBytes.data()), fileSize);
+
+    fileBytes.resize(file.gcount());
+    return fileBytes;
 }

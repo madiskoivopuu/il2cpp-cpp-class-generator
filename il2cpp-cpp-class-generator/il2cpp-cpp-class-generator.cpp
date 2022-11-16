@@ -65,13 +65,6 @@ int main()
         return 0;
     }
 
-    UnityVersion version = { 0 };
-    if (!GetUnityVersion(gameManLoc, version)) {
-        std::cout << "Failed to get unity version from provided globalgamemanagers." << std::endl;
-        std::cin.get();
-        return 0;
-    }
-
     // Load the metadata bytes into memory to get the main version
     std::vector<BYTE> metadataBytes = LoadFileAsBinary(metadataLoc);
     if (!metadataBytes.size()) {
@@ -95,7 +88,15 @@ int main()
         return 0;
     }
 
-    Il2CppMetadataRegistration_B64* pMetadataRegistration = GetMedatataRegistrationPtr(il2cppBytes, MetadataVersionFromUnity(metadataBytes, version));
+    // unity version detection
+    UnityVersion version = { 0 };
+    if (!GetUnityVersion(gameManLoc, version)) {
+        std::cout << "Failed to get unity version from provided globalgamemanagers." << std::endl;
+        std::cin.get();
+        return 0;
+    }
+
+   Il2CppMetadataRegistration_B64* pMetadataRegistration = GetMedatataRegistrationPtr(il2cppBytes, header, MetadataVersionFromUnity(metadataBytes, version));
     if(!pMetadataRegistration) {
         std::cout << "Couldn't find the pointer to metadata registration inside GameAssembly.dll/libil2cpp.so." << std::endl;
         std::cin.get();
@@ -196,7 +197,6 @@ int main()
         return 0;
     }
 
-    delete[] metadataBytes;
     return 0;
 }
 

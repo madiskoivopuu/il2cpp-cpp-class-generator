@@ -46,9 +46,9 @@ void ReadUnityVersionBytes(char* fileBytes, int readIndex, UnityVersion& unityVe
 }
 
 bool GetUnityVersion(char* gameManPath, UnityVersion& unityVer) {
+    // only read 63 bytes cuz the version info should be at the beginning
 	char fileBytes[64] = {0};
 	std::ifstream file(gameManPath, std::ios_base::binary);
-
 	file.read(fileBytes, sizeof(fileBytes)-1);
 
 	ReadUnityVersionBytes(fileBytes, 0x14, unityVer);

@@ -1,5 +1,9 @@
 #pragma once
 #include <cstdint>
+#include <vector>
+#include <Windows.h>
+
+#include "../metadata-file/versions/metadata-v24-0.h"
 
 // 32 and 64 bit structs starting from metadata version 19
 struct Il2CppMetadataRegistration_B32 // we will use this one so the alignment stays correct
@@ -42,4 +46,4 @@ struct Il2CppMetadataRegistration_B64
     void* metadataUsages;
 };
 
-Il2CppMetadataRegistration_B64* GetMedatataRegistrationPtr(std::vector<BYTE> il2cppBytes, float metadataVersion);
+Il2CppMetadataRegistration_B64* GetMedatataRegistrationPtr(std::vector<BYTE> il2cppBytes, Il2CppGlobalMetadataHeader_v24_0* header, float metadataVersion);
