@@ -46,4 +46,4 @@ struct Il2CppMetadataRegistration_B64
     void* metadataUsages;
 };
 
-Il2CppMetadataRegistration_B64* GetMedatataRegistrationPtr(std::vector<BYTE> il2cppBytes, Il2CppGlobalMetadataHeader_v24_0* header, float metadataVersion);
+Il2CppMetadataRegistration_B64* GetMedatataRegistrationPtr(std::vector<BYTE>& il2cppBytes, Il2CppGlobalMetadataHeader_v24_0* header, float metadataVersion);

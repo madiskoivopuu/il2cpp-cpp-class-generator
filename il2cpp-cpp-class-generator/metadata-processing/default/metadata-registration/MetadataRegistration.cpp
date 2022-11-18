@@ -9,8 +9,8 @@
 #include "../metadata-file/versions/metadata-v24-5.h"
 #include "../metadata-file/versions/metadata-v29-0.h"
 
-// Pattern scans 3 specific int32_t's in memory that are contiguous. If found, will return the pointer to the metadata registration.
-Il2CppMetadataRegistration_B64* GetMedatataRegistrationPtr(std::vector<BYTE> il2cppBytes, Il2CppGlobalMetadataHeader_v24_0* header, float metadataVersion) {
+// Pattern scans 3 specific int32_t's in memory that are contiguous. If found, will return the pointer to the metadata registration (in our own memory).
+Il2CppMetadataRegistration_B64* GetMedatataRegistrationPtr(std::vector<BYTE>& il2cppBytes, Il2CppGlobalMetadataHeader_v24_0* header, float metadataVersion) {
 	FileInformation fileInfo = GetFileInfoFromFileBytes(il2cppBytes);
 	if (fileInfo.arch == FileArch::UNKNOWN) return nullptr;
 
@@ -39,11 +39,11 @@ Il2CppMetadataRegistration_B64* GetMedatataRegistrationPtr(std::vector<BYTE> il2
 		// TODO: check if this method actually works for unity version under 24.5...
 		if (metadataVersion < 24.5f) {
 			if (typeDefsSizesCount == searchTypesCount && methodSpecsCount == searchMethodSpecsCount) {
-				return reinterpret_cast<Il2CppMetadataRegistration_B64*>(i - 8 * wordSize);
+				return reinterpret_cast<Il2CppMetadataRegistration_B64*>(il2cppBytes.data() + i - 8 * wordSize);
 			}
 		}
 		else if (typeDefsSizesCount == searchTypesCount && fieldOffsetsCount == searchTypesCount) {
-			return reinterpret_cast<Il2CppMetadataRegistration_B64*>(i - 8 * wordSize);
+			return reinterpret_cast<Il2CppMetadataRegistration_B64*>(il2cppBytes.data() + i - 8 * wordSize);
 		}
 	}
 
