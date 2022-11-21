@@ -1,5 +1,5 @@
 #pragma once
-#include "metadata-const.h"
+#include "../../../../il2cpp/metadata-const.h"
 
 struct Il2CppImage;
 struct Il2CppType;

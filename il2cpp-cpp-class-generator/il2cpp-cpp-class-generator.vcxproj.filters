@@ -41,7 +41,7 @@
     <ClInclude Include="metadata-processing\default\metadata-file\versions\metadata-v24-0.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="metadata-processing\default\metadata-file\versions\metadata-const.h">
+    <ClInclude Include="il2cpp\metadata-const.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="metadata-processing\default\metadata-file\versions\metadata-v24-1.h">
@@ -80,13 +80,16 @@
     <ClInclude Include="metadata-processing\default\metadata-file\MetadataProcessorImpl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="metadata-processing\default\metadata-file\il2cpp-tabledefs.h">
+    <ClInclude Include="il2cpp\il2cpp-tabledefs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="metadata-processing\default\metadata-registration\MetadataRegistration.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="utils\FileHelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="il2cpp\il2cpp-binarystructs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

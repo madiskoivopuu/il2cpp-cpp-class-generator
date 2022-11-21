@@ -1,6 +1,5 @@
 #pragma once
 #include "../../../class-generator/typeinfo.h"
-#include "il2cpp-tabledefs.h"
 
 #include <vector>
 #include <unordered_map>

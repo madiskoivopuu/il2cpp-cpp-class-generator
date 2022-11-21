@@ -96,8 +96,8 @@ int main()
         return 0;
     }
 
-   Il2CppMetadataRegistration_B64* pMetadataRegistration = GetMedatataRegistrationPtr(il2cppBytes, header, MetadataVersionFromUnity(metadataBytes, version));
-    if(!pMetadataRegistration) {
+   Il2CppMetadataRegistration_B64 metadataRegistration = GetMedatataRegistration(il2cppBytes, header, MetadataVersionFromUnity(metadataBytes, version));
+    if(metadataRegistration.genericClassesCount == -1) {
         std::cout << "Couldn't find the pointer to metadata registration inside GameAssembly.dll/libil2cpp.so." << std::endl;
         std::cin.get();
         return 0;
