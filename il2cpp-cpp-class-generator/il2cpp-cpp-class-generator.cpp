@@ -25,6 +25,12 @@
 #include "utils/UnityVersion.h"
 #include "utils/FileHelper.h"
 
+#ifdef _WIN64
+#define CURRENT_ARCH FileArch::B64
+#else
+#define CURRENT_ARCH FileArch::B32
+#endif
+
 bool GetUserSelectedFileLoc(char* location) {
     OPENFILENAME selectedFile = { 0 };
     selectedFile.lStructSize = sizeof(OPENFILENAME);
@@ -43,7 +49,7 @@ bool GetUserSelectedFileLoc(char* location) {
 int main()
 {
     char metadataLoc[MAX_PATH+FILENAME_MAX] = { 0 };
-    char il2cppLoc[MAX_PATH + FILENAME_MAX] = { 0 };
+    char il2cppLoc[MAX_PATH+FILENAME_MAX] = { 0 };
     char gameManLoc[MAX_PATH+FILENAME_MAX] = { 0 };
 
     std::cout << "Choose your global-metadata.dat file..." << std::endl;
@@ -65,6 +71,24 @@ int main()
         return 0;
     }
 
+    // Load il2cpp dll/so and check if the binary is built for the same architecture (32/64 bit) as this executable
+    std::vector<BYTE> il2cppBytes = LoadFileAsBinary(il2cppLoc);
+    if (!il2cppBytes.size()) {
+        std::cout << "Failed to load GameAssembly/il2cpp file." << std::endl;
+        std::cin.get();
+        return 0;
+    }
+    FileInformation fileInfo = GetFileInfoFromFileBytes(il2cppBytes);
+    if (fileInfo.arch != CURRENT_ARCH) {
+        std::cout << "Cannot reverse the il2cpp binary since it isn't built for the same architecture (32/64 bits) as this executable. Please use the appropriate executable." << std::endl;
+        std::cout << "Il2cpp binary: " << fileInfo.arch << " bits" << std::endl;
+        std::cout << "Current executable: " << CURRENT_ARCH << " bits" << std::endl;
+        std::cin.get();
+        return 0;
+    }
+
+
+
     // Load the metadata bytes into memory to get the main version
     std::vector<BYTE> metadataBytes = LoadFileAsBinary(metadataLoc);
     if (!metadataBytes.size()) {
@@ -80,14 +104,6 @@ int main()
         return 0;
     }
 
-    // Load il2cpp dll/so and get the metadata registration from there
-    std::vector<BYTE> il2cppBytes = LoadFileAsBinary(il2cppLoc);
-    if (!metadataBytes.size()) {
-        std::cout << "Failed to load GameAssembly/il2cpp file." << std::endl;
-        std::cin.get();
-        return 0;
-    }
-
     // unity version detection
     UnityVersion version = { 0 };
     if (!GetUnityVersion(gameManLoc, version)) {
@@ -96,7 +112,7 @@ int main()
         return 0;
     }
 
-   Il2CppMetadataRegistration_B64 metadataRegistration = GetMedatataRegistration(il2cppBytes, header, MetadataVersionFromUnity(metadataBytes, version));
+   Il2CppMetadataRegistration metadataRegistration = GetMedatataRegistration(il2cppBytes, header, MetadataVersionFromUnity(metadataBytes, version));
     if(metadataRegistration.genericClassesCount == -1) {
         std::cout << "Couldn't find the pointer to metadata registration inside GameAssembly.dll/libil2cpp.so." << std::endl;
         std::cin.get();

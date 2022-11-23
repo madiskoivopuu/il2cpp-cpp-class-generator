@@ -12,8 +12,8 @@ enum class FileType : unsigned int
 enum FileArch : unsigned int
 {
 	UNKNOWN = 0,
-	B32,
-	B64
+	B32 = 32,
+	B64 = 64
 };
 
 struct FileInformation {
