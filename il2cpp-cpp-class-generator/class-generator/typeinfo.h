@@ -4,37 +4,40 @@
 #include <vector>
 
 struct FieldData {
-	char* name;
-	bool _static;
+	char* name = nullptr;
+	bool _static = false;
+	Il2CppTypeEnum type = Il2CppTypeEnum::IL2CPP_TYPE_END;
+	uintptr_t defaultValue = 0; // could be char*, uint8_t, int etc.
 };
 
 
 struct PropData {
-	char* name;
+	char* name = nullptr;
 };
 
 
 struct MethodArgument {
-	char* name;
-	Il2CppTypeEnum argType;
-	bool passByRef;
+	char* name = nullptr;
+	Il2CppTypeEnum type = Il2CppTypeEnum::IL2CPP_TYPE_END;
+	bool passByRef = false;
 };
 
 struct MethodData {
-	char* name;
-	Il2CppTypeEnum returnType;
+	char* name = nullptr;
+	Il2CppTypeEnum returnType = Il2CppTypeEnum::IL2CPP_TYPE_END;
 	std::vector<MethodArgument> arguments;
 };
 
 
 enum class ClassType {
-	ENUM = 0,
+	UNKNOWN = 0,
+	ENUM,
 	STRUCT,
 	CLASS
 };
 struct ClassData {
-	char* _namespace;
-	char* name;
+	char* _namespace = nullptr;
+	char* name = nullptr;
 	ClassType type;
 
 	std::vector<FieldData> fields;

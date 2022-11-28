@@ -5,14 +5,15 @@
 #include <vector>
 #include <Windows.h>
 
-FileInformation GetFileInfoFromFileBytes(std::vector<BYTE> fileBuffer) {
-    FileInformation info = { FileType::UNKNOWN, FileArch::UNKNOWN };
-    if (!fileBuffer.size()) return info;
 
-    BYTE* fileBytes = fileBuffer.data();
+void IFileHelper::GetFileInfoFromLoadedBytes() {
+    FileInformation info = { FileType::UNKNOWN, FileArch::UNKNOWN };
+    if (!this->fileBytes.size()) return;
+
+    BYTE* fileBytes = this->fileBytes.data();
 
     // file magic number checks
-    if (fileBuffer[0] == 0x4D && fileBuffer[1] == 0x5A) { // PE
+    if (this->fileBytes[0] == 0x4D && this->fileBytes[1] == 0x5A) { // PE
         info.format = FileType::PE; 
         // PE files keep an offset to the signature at offset 0x3c
         // after the signature the first 2 bytes signify the machine type
@@ -30,7 +31,7 @@ FileInformation GetFileInfoFromFileBytes(std::vector<BYTE> fileBuffer) {
             break;
         }
     }
-    else if(fileBuffer[0] == 0x7F && fileBuffer[1] == 0x45 && fileBuffer[2] == 0x4C && fileBuffer[3] == 0x46) { // ELF
+    else if(this->fileBytes[0] == 0x7F && this->fileBytes[1] == 0x45 && this->fileBytes[2] == 0x4C && this->fileBytes[3] == 0x46) { // ELF
         info.format = FileType::ELF;
         uint8_t is32or64bit = static_cast<uint8_t>(*(fileBytes+0x4));
         if (is32or64bit == 1) {
@@ -42,17 +43,11 @@ FileInformation GetFileInfoFromFileBytes(std::vector<BYTE> fileBuffer) {
         else throw std::exception("Could not correctly determine whether ELF is 32/64 bit binary.");
     }
 
-    return info;
+    this->info = info;
+    return;
 }
 
-FileInformation GetFileInfo(char* filePath) {
-    std::vector<BYTE> buf = LoadFileAsBinary(filePath);
-    FileInformation info = GetFileInfoFromFileBytes(buf);
-
-    return info;
-}
-
-std::vector<BYTE> LoadFileAsBinary(char* filePath) {
+std::vector<BYTE> IFileHelper::LoadFileAsBinary(char* filePath) {
     std::ifstream file(filePath, std::ios::binary);
     // Stop eating new lines in binary mode!!!
     file.unsetf(std::ios::skipws);
@@ -62,11 +57,20 @@ std::vector<BYTE> LoadFileAsBinary(char* filePath) {
     file.seekg(0, std::ios::beg);
 
     // reserve enough memory to read all bytes to vector
-    std::vector<BYTE> fileBytes;
-    fileBytes.resize(fileSize);
+    this->fileBytes.resize(fileSize);
 
-    file.read(reinterpret_cast<char*>(fileBytes.data()), fileSize);
+    file.read(reinterpret_cast<char*>(this->fileBytes.data()), fileSize);
 
-    fileBytes.resize(file.gcount());
+    this->fileBytes.resize(file.gcount());
     return fileBytes;
+}
+
+void IFileHelper::GetFileInfo(char* filePath) {
+    this->LoadFileAsBinary(filePath);
+    if (this->fileBytes.size() > 0) {
+        this->GetFileInfoFromFileBytes();
+        this->fileLoaded = true;
+    }
+
+    return;
 }

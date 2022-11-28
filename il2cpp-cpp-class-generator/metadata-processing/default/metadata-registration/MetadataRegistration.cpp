@@ -24,7 +24,7 @@ Il2CppMetadataRegistration GetMedatataRegistration(std::vector<BYTE>& il2cppByte
 
 	// pattern scan configuration
 	// struct is aligned differently on 32bit/64bit arch, for the pattern scan to work properly we have to keep track of this
-	int wordSize = WORD_SIZE; 
+	uintptr_t wordSize = WORD_SIZE;
 
 	// calculate the types count & method specs count
 	int32_t searchTypesCount = 0;
@@ -34,7 +34,7 @@ Il2CppMetadataRegistration GetMedatataRegistration(std::vector<BYTE>& il2cppByte
 	else if (metadataVersion <= 29.0f) searchTypesCount = header->typeDefinitionsCount / sizeof(Il2CppTypeDefinition_v29_0);
 	int32_t searchMethodSpecsCount = header->metadataUsageListsCount / sizeof(Il2CppMetadataUsageList);
 
-	for (int i = 0; i < il2cppBytes.size() - wordSize*8; i += wordSize) {		
+	for (uintptr_t i = 0; i < il2cppBytes.size() - wordSize*8; i += wordSize) {
 		int32_t methodSpecsCount = *reinterpret_cast<int32_t*>(&il2cppBytes[i]);
 		int32_t fieldOffsetsCount = *reinterpret_cast<int32_t*>(&il2cppBytes[i + 2*wordSize]);
 		int32_t typeDefsSizesCount = *reinterpret_cast<int32_t*>(&il2cppBytes[i + 4*wordSize]);

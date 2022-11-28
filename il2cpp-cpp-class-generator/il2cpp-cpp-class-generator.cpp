@@ -127,86 +127,56 @@ int main()
             std::cout << "Metadata v29.1 parsing not implemented yet" << std::endl;
             return 0;
         }
-        classesData = ParseMetadata<Il2CppGlobalMetadataHeader_v29_0,
-                        Il2CppImageDefinition_v29_0,
-                        Il2CppTypeDefinition_v29_0>(metadataBytes);
+        classesData = ParseMetadata<IL2CPP_TEMPLATES_V29_0>(metadataBytes, reinterpret_cast<uintptr_t>(il2cppBytes.data()), metadataRegistration);
         break;
     
     case 28:
-        classesData = ParseMetadata<Il2CppGlobalMetadataHeader_v27_9,
-            Il2CppImageDefinition_v27_9,
-            Il2CppTypeDefinition_v27_9>(metadataBytes);
+        classesData = ParseMetadata<IL2CPP_TEMPLATES_V27_9>(metadataBytes, reinterpret_cast<uintptr_t>(il2cppBytes.data()), metadataRegistration);
         break;
     case 27:
         if (UNITY_VERSION_GREATER_OR_EQUAL(version, 2022, 2, 4)) { // v27.1
-            classesData = ParseMetadata<Il2CppGlobalMetadataHeader_v27_1,
-                Il2CppImageDefinition_v27_1,
-                Il2CppTypeDefinition_v27_1>(metadataBytes);
+            classesData = ParseMetadata<IL2CPP_TEMPLATES_V27_1>(metadataBytes, reinterpret_cast<uintptr_t>(il2cppBytes.data()), metadataRegistration);
         }
         else { // v27.0
-            classesData = ParseMetadata<Il2CppGlobalMetadataHeader_v27_0,
-                Il2CppImageDefinition_v27_0,
-                Il2CppTypeDefinition_v27_0>(metadataBytes);
+            classesData = ParseMetadata<IL2CPP_TEMPLATES_V27_0>(metadataBytes, reinterpret_cast<uintptr_t>(il2cppBytes.data()), metadataRegistration);
         }
         break;
         // v27.9??
     case 26: 
     case 25:
-        classesData = ParseMetadata<Il2CppGlobalMetadataHeader_v24_5,
-            Il2CppImageDefinition_v24_5,
-            Il2CppTypeDefinition_v24_5>(metadataBytes);
+        classesData = ParseMetadata<IL2CPP_TEMPLATES_V24_5>(metadataBytes, reinterpret_cast<uintptr_t>(il2cppBytes.data()), metadataRegistration);
         break;
     case 24:
         if (UNITY_VERSION_GREATER_OR_EQUAL(version, 2020, 1, 11)) { // v24.4
-            classesData = ParseMetadata<Il2CppGlobalMetadataHeader_v24_4,
-                Il2CppImageDefinition_v24_4,
-                Il2CppTypeDefinition_v24_4>(metadataBytes);
+            classesData = ParseMetadata<IL2CPP_TEMPLATES_V24_5>(metadataBytes, reinterpret_cast<uintptr_t>(il2cppBytes.data()), metadataRegistration);
         }
         else if (UNITY_VERSION_GREATER_OR_EQUAL(version, 2020, 0, 0)) { // v24.3
-            classesData = ParseMetadata<Il2CppGlobalMetadataHeader_v24_3,
-                Il2CppImageDefinition_v24_3,
-                Il2CppTypeDefinition_v24_3>(metadataBytes);
+            classesData = ParseMetadata<IL2CPP_TEMPLATES_V24_3>(metadataBytes, reinterpret_cast<uintptr_t>(il2cppBytes.data()), metadataRegistration);
         }
         else if (UNITY_VERSION_GREATER_OR_EQUAL(version, 2019, 4, 21)) { // v24.5
-            classesData = ParseMetadata<Il2CppGlobalMetadataHeader_v24_5,
-                Il2CppImageDefinition_v24_5,
-                Il2CppTypeDefinition_v24_5>(metadataBytes);
+            classesData = ParseMetadata<IL2CPP_TEMPLATES_V24_5>(metadataBytes, reinterpret_cast<uintptr_t>(il2cppBytes.data()), metadataRegistration);
         }
         else if (UNITY_VERSION_GREATER_OR_EQUAL(version, 2019, 4, 15)) { // v24.4
-            classesData = ParseMetadata<Il2CppGlobalMetadataHeader_v24_4,
-                Il2CppImageDefinition_v24_4,
-                Il2CppTypeDefinition_v24_4>(metadataBytes);
+            classesData = ParseMetadata<IL2CPP_TEMPLATES_V24_4>(metadataBytes, reinterpret_cast<uintptr_t>(il2cppBytes.data()), metadataRegistration);
         }
         else if (UNITY_VERSION_GREATER_OR_EQUAL(version, 2019, 3, 7)) { // v24.3
-            classesData = ParseMetadata<Il2CppGlobalMetadataHeader_v24_3,
-                Il2CppImageDefinition_v24_3,
-                Il2CppTypeDefinition_v24_3>(metadataBytes);
+            classesData = ParseMetadata<IL2CPP_TEMPLATES_V24_3>(metadataBytes, reinterpret_cast<uintptr_t>(il2cppBytes.data()), metadataRegistration);
         }
         else if (UNITY_VERSION_GREATER_OR_EQUAL(version, 2019, 0, 0)) { // v24.2
-            classesData = ParseMetadata<Il2CppGlobalMetadataHeader_v24_2,
-                Il2CppImageDefinition_v24_2,
-                Il2CppTypeDefinition_v24_2>(metadataBytes);
+            classesData = ParseMetadata<IL2CPP_TEMPLATES_V24_2>(metadataBytes, reinterpret_cast<uintptr_t>(il2cppBytes.data()), metadataRegistration);
         }
         else if (UNITY_VERSION_GREATER_OR_EQUAL(version, 2018, 4, 34)) { // v24.15
-            classesData = ParseMetadata<Il2CppGlobalMetadataHeader_v24_15,
-                Il2CppImageDefinition_v24_15,
-                Il2CppTypeDefinition_v24_15>(metadataBytes);
+            classesData = ParseMetadata<IL2CPP_TEMPLATES_V24_15>(metadataBytes, reinterpret_cast<uintptr_t>(il2cppBytes.data()), metadataRegistration);
         }
         else if (UNITY_VERSION_GREATER_OR_EQUAL(version, 2018, 3, 0)) { // v24.1
-            classesData = ParseMetadata<Il2CppGlobalMetadataHeader_v24_1,
-                Il2CppImageDefinition_v24_1,
-                Il2CppTypeDefinition_v24_1>(metadataBytes);
+            classesData = ParseMetadata<IL2CPP_TEMPLATES_V24_1>(metadataBytes, reinterpret_cast<uintptr_t>(il2cppBytes.data()), metadataRegistration);
         }
         else { // v24
-            classesData = ParseMetadata<Il2CppGlobalMetadataHeader_v24_0,
-                Il2CppImageDefinition_v24_0,
-                Il2CppTypeDefinition_v24_0>(metadataBytes);
+            classesData = ParseMetadata<IL2CPP_TEMPLATES_V24_0>(metadataBytes, reinterpret_cast<uintptr_t>(il2cppBytes.data()), metadataRegistration);
         }
         break;
     case 23:
-        classesData = ParseMetadata<Il2CppGlobalMetadataHeader_v24_0,
-            Il2CppImageDefinition_v24_0,
-            Il2CppTypeDefinition_v24_0>(metadataBytes);
+        classesData = ParseMetadata<IL2CPP_TEMPLATES_V23_0>(metadataBytes, reinterpret_cast<uintptr_t>(il2cppBytes.data()), metadataRegistration);
         break;
     default:
         std::cout << "Unsupported metadata version " << header->version << std::endl;

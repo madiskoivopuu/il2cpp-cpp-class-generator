@@ -21,7 +21,7 @@ struct Il2CppMetadataRegistration
     int32_t fieldOffsetsCount;
     int32_t** fieldOffsets;
     int32_t typeDefinitionsSizesCount;
-    void* typeDefinitionsSizes;
+    int32_t* typeDefinitionsSizes;
     uint64_t metadataUsagesCount;
     int32_t* metadataUsages;
 };

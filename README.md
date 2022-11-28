@@ -3,7 +3,7 @@ A program that generates C++ classes for Il2cpp games to make modding them easie
 
 # To-do list
 - [x] Make a function to detect the Unity version of an Il2cpp game
-- [x] Make a function that gets the file type and bits of an executable 
+- [ ] Make a file type specific class that loads an executable, gets the file information and 
 - [x] Add basic global-metadata.dat related structs into the project 
 - [x] Create a function to get the Il2cppMetadataRegistration pointer (necessary for generating C++ classes from Il2cpp data)
 - [ ] Parse metadata information (such as classes, their fields, methods etc.) into our own organized structs/vectors
