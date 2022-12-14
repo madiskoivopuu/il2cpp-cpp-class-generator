@@ -16,28 +16,10 @@ enum FileArch : unsigned int
 	B64 = 64
 };
 struct FileInformation {
-	FileType format;
-	FileArch arch;
+	FileType format {};
+	FileArch arch {};
 };
 
-class IFileHelper {
-public:
-	FileInformation info;
-	std::vector<BYTE> fileBytes;
-	bool fileLoaded;
-
-	 IFileHelper(char* filePath) : info(), fileLoaded(false)
-	{
-		this->GetFileInfo(filePath);
-		this->LoadSectionInfo();
-	}
-
-	virtual void LoadSectionInfo() = 0;
-	virtual void MapVAToReal(uintptr_t virtualAddress) = 0;
-
-private:
-	virtual void GetFileInfoFromFileBytes();
-	virtual std::vector<BYTE> LoadFileAsBinary(char* filePath);
-	virtual void GetFileInfo(char* filePath);
-};
-
+FileInformation GetFileInfoFromFileBytes(std::vector<BYTE> fileBytes);
+std::vector<BYTE> LoadFileAsBinary(char* filePath);
+FileInformation GetFileInfo(char* filePath);

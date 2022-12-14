@@ -6,14 +6,13 @@
 #include <Windows.h>
 
 
-void IFileHelper::GetFileInfoFromLoadedBytes() {
+FileInformation GetFileInfoFromFileBytes(std::vector<BYTE> fileBuffer) {
     FileInformation info = { FileType::UNKNOWN, FileArch::UNKNOWN };
-    if (!this->fileBytes.size()) return;
+    if (!fileBuffer.size()) return info;
 
-    BYTE* fileBytes = this->fileBytes.data();
-
+    BYTE* fileBytes = fileBuffer.data();
     // file magic number checks
-    if (this->fileBytes[0] == 0x4D && this->fileBytes[1] == 0x5A) { // PE
+    if (fileBytes[0] == 0x4D && fileBytes[1] == 0x5A) { // PE
         info.format = FileType::PE; 
         // PE files keep an offset to the signature at offset 0x3c
         // after the signature the first 2 bytes signify the machine type
@@ -31,9 +30,9 @@ void IFileHelper::GetFileInfoFromLoadedBytes() {
             break;
         }
     }
-    else if(this->fileBytes[0] == 0x7F && this->fileBytes[1] == 0x45 && this->fileBytes[2] == 0x4C && this->fileBytes[3] == 0x46) { // ELF
+    else if(fileBytes[0] == 0x7F && fileBytes[1] == 0x45 && fileBytes[2] == 0x4C && fileBytes[3] == 0x46) { // ELF
         info.format = FileType::ELF;
-        uint8_t is32or64bit = static_cast<uint8_t>(*(fileBytes+0x4));
+        uint8_t is32or64bit = static_cast<uint8_t>(fileBytes[0x4]);
         if (is32or64bit == 1) {
             info.arch = FileArch::B32;
         }
@@ -43,11 +42,10 @@ void IFileHelper::GetFileInfoFromLoadedBytes() {
         else throw std::exception("Could not correctly determine whether ELF is 32/64 bit binary.");
     }
 
-    this->info = info;
-    return;
+    return info;
 }
 
-std::vector<BYTE> IFileHelper::LoadFileAsBinary(char* filePath) {
+std::vector<BYTE> LoadFileAsBinary(char* filePath) {
     std::ifstream file(filePath, std::ios::binary);
     // Stop eating new lines in binary mode!!!
     file.unsetf(std::ios::skipws);
@@ -57,20 +55,16 @@ std::vector<BYTE> IFileHelper::LoadFileAsBinary(char* filePath) {
     file.seekg(0, std::ios::beg);
 
     // reserve enough memory to read all bytes to vector
-    this->fileBytes.resize(fileSize);
+    std::vector<BYTE> fileBytes;
+    fileBytes.resize(fileSize);
 
-    file.read(reinterpret_cast<char*>(this->fileBytes.data()), fileSize);
+    file.read(reinterpret_cast<char*>(fileBytes.data()), fileSize);
 
-    this->fileBytes.resize(file.gcount());
+    fileBytes.resize(file.gcount());
     return fileBytes;
 }
 
-void IFileHelper::GetFileInfo(char* filePath) {
-    this->LoadFileAsBinary(filePath);
-    if (this->fileBytes.size() > 0) {
-        this->GetFileInfoFromFileBytes();
-        this->fileLoaded = true;
-    }
-
-    return;
+FileInformation GetFileInfo(char* filePath) {
+    std::vector<BYTE> fileBytes = LoadFileAsBinary(filePath);
+    return GetFileInfoFromFileBytes(fileBytes);
 }

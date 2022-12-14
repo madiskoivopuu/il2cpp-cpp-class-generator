@@ -4,28 +4,28 @@
 #include <vector>
 
 struct FieldData {
-	char* name = nullptr;
-	bool _static = false;
-	Il2CppTypeEnum type = Il2CppTypeEnum::IL2CPP_TYPE_END;
-	uintptr_t defaultValue = 0; // could be char*, uint8_t, int etc.
+	char* name{};
+	bool _static{};
+	Il2CppTypeEnum type{};
+	uintptr_t defaultValue{}; // could be char*, uint8_t, int etc.
 };
 
 
 struct PropData {
-	char* name = nullptr;
+	char* name{};
 };
 
 
 struct MethodArgument {
-	char* name = nullptr;
-	Il2CppTypeEnum type = Il2CppTypeEnum::IL2CPP_TYPE_END;
-	bool passByRef = false;
+	char* name{};
+	Il2CppTypeEnum type{};
+	bool passByRef{};
 };
 
 struct MethodData {
-	char* name = nullptr;
-	Il2CppTypeEnum returnType = Il2CppTypeEnum::IL2CPP_TYPE_END;
-	std::vector<MethodArgument> arguments;
+	char* name{};
+	Il2CppTypeEnum returnType{};
+	std::vector<MethodArgument> arguments{};
 };
 
 
@@ -36,17 +36,17 @@ enum class ClassType {
 	CLASS
 };
 struct ClassData {
-	char* _namespace = nullptr;
-	char* name = nullptr;
-	ClassType type;
+	char* _namespace{};
+	char* name{};
+	ClassType type{};
 
-	std::vector<FieldData> fields;
-	std::vector<PropData> properties;
-	std::vector<MethodData> methods;
+	std::vector<FieldData> fields{};
+	std::vector<PropData> properties{};
+	std::vector<MethodData> methods{};
 };
 
 
 struct Il2cppImageData {
-	char* name;
-	std::vector<ClassData> classes;
+	char* name{};
+	std::vector<ClassData> classes{};
 };

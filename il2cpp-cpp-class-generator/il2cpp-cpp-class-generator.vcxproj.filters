@@ -27,6 +27,9 @@
     <ClCompile Include="utils\FileHelper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="utils\filetypes\PE.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="class-generator\typeinfo.h">
@@ -90,6 +93,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="il2cpp\il2cpp-binarystructs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\filetypes\PE.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\filetypes\IFile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

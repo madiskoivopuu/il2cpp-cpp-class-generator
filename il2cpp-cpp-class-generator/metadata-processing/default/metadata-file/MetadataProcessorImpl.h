@@ -3,13 +3,12 @@
 #include "../../../il2cpp/il2cpp-tabledefs.h"
 #include "../../../il2cpp/il2cpp-binarystructs.h"
 #include "../metadata-registration/MetadataRegistration.h"
+#include "../../../utils/filetypes/IFile.h"
 
 #include <vector>
 #include <unordered_map>
 
 // Template macros
-#define VA_TO_REAL(type, baseAddr, offset) reinterpret_cast<type>(reinterpret_cast<uintptr_t>(baseAddr) + static_cast<uintptr_t>(offset))
-
 #define IL2CPP_TEMPLATES_V23_0 Il2CppGlobalMetadataHeader_v24_0, Il2CppImageDefinition_v24_0, Il2CppTypeDefinition_v24_0, Il2CppFieldDefinition_v24_0
 #define IL2CPP_TEMPLATES_V24_0 Il2CppGlobalMetadataHeader_v24_0, Il2CppImageDefinition_v24_0, Il2CppTypeDefinition_v24_0, Il2CppFieldDefinition_v24_0
 #define IL2CPP_TEMPLATES_V24_1 Il2CppGlobalMetadataHeader_v24_1, Il2CppImageDefinition_v24_1, Il2CppTypeDefinition_v24_1, Il2CppFieldDefinition_v24_1
@@ -27,7 +26,8 @@
 std::unordered_map<char, char> invalidCharReplacements = {
 	{'.', '_'},
 	{'<', '_'},
-	{'>', '_'}
+	{'>', '_'},
+	{'\n', '_'}
 };
 char* ReplaceInvalidCharacters(char* string) {
 	for (int i = 0; i < strlen(string); i++) {
@@ -61,8 +61,9 @@ TPropDef* GetPropInfoFromIndex(THeader* header, int index) {
 	return reinterpret_cast<TPropDef*>((char*)header + header->propertiesOffset) + index;
 }
 
-Il2CppType* GetTypeFromIndex(uintptr_t il2cppBinaryLoc, Il2CppMetadataRegistration metadataRegistration, int index) {
-	Il2CppType* typeLoc = VA_TO_REAL(Il2CppType*, il2cppBinaryLoc+metadataRegistration.types, index);
+Il2CppType* GetTypeFromIndex(IFile* il2cppBinary, Il2CppMetadataRegistration metadataRegistration, int index) {
+	uintptr_t actualTypesOffset = il2cppBinary->MapVAToReal(reinterpret_cast<uintptr_t>(metadataRegistration.types));
+	Il2CppType* typeLoc = reinterpret_cast<Il2CppType*>(il2cppBinary->fileBytes.data() + actualTypesOffset);
 	return typeLoc;
 }
 
@@ -70,7 +71,7 @@ Il2CppType* GetTypeFromIndex(uintptr_t il2cppBinaryLoc, Il2CppMetadataRegistrati
 // Main metadata parsing function
 //
 template<typename THeader, typename TImgDef, typename TTypeDef, typename TFieldDef>
-std::vector<Il2cppImageData> ParseMetadata(std::vector<BYTE>& metadataBytes, uintptr_t il2cppBinaryLoc, Il2CppMetadataRegistration metadataRegistration) {
+std::vector<Il2cppImageData> ParseMetadata(std::vector<BYTE>& metadataBytes, IFile* il2cppBinary, Il2CppMetadataRegistration metadataRegistration) {
 	THeader* header = reinterpret_cast<THeader*>(metadataBytes.data());
 
 	std::vector<Il2cppImageData> allImages;
@@ -92,13 +93,15 @@ std::vector<Il2cppImageData> ParseMetadata(std::vector<BYTE>& metadataBytes, uin
 			currClass._namespace = ReplaceInvalidCharacters(GetStringFromIndex<THeader>(header, typeDef->namespaceIndex));
 			currClass.name = ReplaceInvalidCharacters(GetStringFromIndex<THeader>(header, typeDef->nameIndex));
 
+			std::cout << currClass._namespace << " " << currClass.name << std::endl;
+
 			// handle type based on what it is
 			if ((typeDef->bitfield >> 1) & 0x1) { // 2nd bit is 1 = enum
 				currClass.type = ClassType::ENUM;
 				for (int i = typeDef->fieldStart; i < typeDef->fieldStart + typeDef->field_count; i++) {
 					FieldData fieldData;
 					TFieldDef* field = GetFieldInfoFromIndex<THeader, TFieldDef>(header, i);
-					Il2CppType* fieldType = GetTypeFromIndex(il2cppBinaryLoc, metadataRegistration, field->typeIndex);
+					Il2CppType* fieldType = GetTypeFromIndex(il2cppBinary, metadataRegistration, field->typeIndex);
 
 					fieldData.name = ReplaceInvalidCharacters(GetStringFromIndex<THeader>(header, field->nameIndex));
 					fieldData.type = fieldType->type;
@@ -114,10 +117,7 @@ std::vector<Il2cppImageData> ParseMetadata(std::vector<BYTE>& metadataBytes, uin
 			}
 			else {
 				currClass.type = ClassType::CLASS;
-
 			}
-
-			std::cout << currClass._namespace << " " << currClass.name << std::endl;
 		}
 
 

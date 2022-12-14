@@ -131,10 +131,13 @@
     <ClCompile Include="utils\FileHelper.cpp" />
     <ClCompile Include="il2cpp-cpp-class-generator.cpp" />
     <ClCompile Include="metadata-processing\default\metadata-registration\MetadataRegistration.cpp" />
+    <ClCompile Include="utils\filetypes\PE.cpp" />
     <ClCompile Include="utils\UnityVersion.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="il2cpp\il2cpp-binarystructs.h" />
+    <ClInclude Include="utils\filetypes\IFile.h" />
+    <ClInclude Include="utils\filetypes\PE.h" />
     <ClInclude Include="utils\FileHelper.h" />
     <ClInclude Include="il2cpp\il2cpp-tabledefs.h" />
     <ClInclude Include="il2cpp\metadata-const.h" />
