@@ -7,7 +7,7 @@ struct FieldData {
 	char* name{};
 	bool _static{};
 	Il2CppTypeEnum type{};
-	uintptr_t defaultValue{}; // could be char*, uint8_t, int etc.
+	uintptr_t defaultValue{}; // ptr to the default value in metadata, we will parse it later
 };
 
 

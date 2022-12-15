@@ -1,7 +1,5 @@
 #pragma once
 
-#include "metadata-const.h"
-
 enum Il2CppTypeEnum
 {
     IL2CPP_TYPE_END = 0x00,       /* End of List */

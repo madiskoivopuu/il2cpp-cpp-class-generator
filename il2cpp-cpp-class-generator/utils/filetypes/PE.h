@@ -8,5 +8,5 @@ public:
 	std::vector<IMAGE_SECTION_HEADER> sections;
 
 	PE(std::vector<BYTE>& bytes, FileInformation info);
-	uintptr_t MapVAToReal(uintptr_t virtualAddress);
+	uintptr_t MapVAToOffset(uintptr_t virtualAddress);
 };

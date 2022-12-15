@@ -5,5 +5,5 @@ public:
 	FileInformation info;
 	std::vector<BYTE> fileBytes;
 
-	virtual uintptr_t MapVAToReal(uintptr_t virtualAddress) = 0;
+	virtual uintptr_t MapVAToOffset(uintptr_t virtualAddress) = 0;
 };

@@ -61,9 +61,14 @@ TPropDef* GetPropInfoFromIndex(THeader* header, int index) {
 	return reinterpret_cast<TPropDef*>((char*)header + header->propertiesOffset) + index;
 }
 
+template<typename THeader>
+Il2CppFieldDefaultValue* GetFieldDefaultValueStruct(THeader* header, int index) {
+	return reinterpret_cast<Il2CppFieldDefaultValue*>((char*)header + header->fieldDefaultValuesOffset) + index;
+}
+
 Il2CppType* GetTypeFromIndex(IFile* il2cppBinary, Il2CppMetadataRegistration metadataRegistration, int index) {
-	uintptr_t actualTypesOffset = il2cppBinary->MapVAToReal(reinterpret_cast<uintptr_t>(metadataRegistration.types));
-	Il2CppType* typeLoc = reinterpret_cast<Il2CppType*>(il2cppBinary->fileBytes.data() + actualTypesOffset);
+	uintptr_t actualTypesOffset = il2cppBinary->MapVAToOffset(reinterpret_cast<uintptr_t>(metadataRegistration.types));
+	Il2CppType* typeLoc = reinterpret_cast<Il2CppType*>(il2cppBinary->fileBytes.data() + actualTypesOffset) + index;
 	return typeLoc;
 }
 
@@ -106,10 +111,12 @@ std::vector<Il2cppImageData> ParseMetadata(std::vector<BYTE>& metadataBytes, IFi
 					fieldData.name = ReplaceInvalidCharacters(GetStringFromIndex<THeader>(header, field->nameIndex));
 					fieldData.type = fieldType->type;
 
-					if (fieldType->attrs & FIELD_ATTRIBUTE_LITERAL) {
-
+					Il2CppFieldDefaultValue* defaultVal = GetFieldDefaultValueStruct<THeader>(header, i);
+					if (fieldType->attrs & FIELD_ATTRIBUTE_LITERAL && defaultVal->dataIndex != -1) { // literal = const value
+						fieldData.defaultValue = reinterpret_cast<uintptr_t>( reinterpret_cast<BYTE*>((char*)header + header->fieldAndParameterDefaultValueDataOffset) + defaultVal->dataIndex);
 					}
 
+					currClass.fields.push_back(fieldData);
 				}
 			}
 			else if (typeDef->bitfield & 0x1) { // 1nd bit is 1 = struct
