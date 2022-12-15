@@ -15,21 +15,21 @@
 struct Il2CppMetadataRegistration
 {
     int32_t genericClassesCount;
-    int32_t* genericClasses;
+    int32_t** genericClasses;
     int32_t genericInstsCount;
-    int32_t* genericInsts;
+    int32_t** genericInsts;
     int32_t genericMethodTableCount;
     int32_t* genericMethodTable;
     int32_t typesCount;
-    Il2CppType* types;
+    Il2CppType** types;
     int32_t methodSpecsCount;
     int32_t* methodSpecs;
     int32_t fieldOffsetsCount;
     int32_t** fieldOffsets;
     int32_t typeDefinitionsSizesCount;
-    int32_t* typeDefinitionsSizes;
-    uint64_t metadataUsagesCount;
-    int32_t* metadataUsages;
+    int32_t** typeDefinitionsSizes;
+    int32_t metadataUsagesCount;
+    int32_t** metadataUsages;
 };
 
 Il2CppMetadataRegistration GetMedatataRegistration(IFile* il2cppBytes, Il2CppGlobalMetadataHeader_v24_0* header, float metadataVersion);

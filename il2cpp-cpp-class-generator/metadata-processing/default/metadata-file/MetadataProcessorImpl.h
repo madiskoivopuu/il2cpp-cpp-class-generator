@@ -68,8 +68,8 @@ Il2CppFieldDefaultValue* GetFieldDefaultValueStruct(THeader* header, int index) 
 
 Il2CppType* GetTypeFromIndex(IFile* il2cppBinary, Il2CppMetadataRegistration metadataRegistration, int index) {
 	uintptr_t actualTypesOffset = il2cppBinary->MapVAToOffset(reinterpret_cast<uintptr_t>(metadataRegistration.types));
-	Il2CppType* typeLoc = reinterpret_cast<Il2CppType*>(il2cppBinary->fileBytes.data() + actualTypesOffset) + index;
-	return typeLoc;
+	uintptr_t typeVirtualAddrPtr = *(reinterpret_cast<uintptr_t*>(il2cppBinary->fileBytes.data() + actualTypesOffset) + index);
+	return reinterpret_cast<Il2CppType*>(il2cppBinary->fileBytes.data() + il2cppBinary->MapVAToOffset(typeVirtualAddrPtr));
 }
 
 //
@@ -108,14 +108,12 @@ std::vector<Il2cppImageData> ParseMetadata(std::vector<BYTE>& metadataBytes, IFi
 					TFieldDef* field = GetFieldInfoFromIndex<THeader, TFieldDef>(header, i);
 					Il2CppType* fieldType = GetTypeFromIndex(il2cppBinary, metadataRegistration, field->typeIndex);
 
+					Il2CppFieldDefaultValue* defaultVal = GetFieldDefaultValueStruct<THeader>(header, i);
+					if (!(fieldType->attrs & FIELD_ATTRIBUTE_LITERAL && defaultVal->dataIndex != -1)) continue;
+
 					fieldData.name = ReplaceInvalidCharacters(GetStringFromIndex<THeader>(header, field->nameIndex));
 					fieldData.type = fieldType->type;
-
-					Il2CppFieldDefaultValue* defaultVal = GetFieldDefaultValueStruct<THeader>(header, i);
-					if (fieldType->attrs & FIELD_ATTRIBUTE_LITERAL && defaultVal->dataIndex != -1) { // literal = const value
-						fieldData.defaultValue = reinterpret_cast<uintptr_t>( reinterpret_cast<BYTE*>((char*)header + header->fieldAndParameterDefaultValueDataOffset) + defaultVal->dataIndex);
-					}
-
+					fieldData.defaultValue = reinterpret_cast<uintptr_t>(reinterpret_cast<BYTE*>((char*)header + header->fieldAndParameterDefaultValueDataOffset) + defaultVal->dataIndex);
 					currClass.fields.push_back(fieldData);
 				}
 			}
