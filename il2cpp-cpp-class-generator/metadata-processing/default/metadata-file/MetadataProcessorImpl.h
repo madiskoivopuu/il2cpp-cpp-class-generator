@@ -62,8 +62,12 @@ TPropDef* GetPropInfoFromIndex(THeader* header, int index) {
 }
 
 template<typename THeader>
-Il2CppFieldDefaultValue* GetFieldDefaultValueStruct(THeader* header, int index) {
-	return reinterpret_cast<Il2CppFieldDefaultValue*>((char*)header + header->fieldDefaultValuesOffset) + index;
+Il2CppFieldDefaultValue* GetFieldDefaultValueStruct(THeader* header, int fieldIndex) {
+	Il2CppFieldDefaultValue* first = reinterpret_cast<Il2CppFieldDefaultValue*>((char*)header + header->fieldDefaultValuesOffset);
+	for (Il2CppFieldDefaultValue* value = first; value < first + header->fieldDefaultValuesCount; value++) { // TODO: cache these values beforehand so we dont have to loop every single time
+		if (value->fieldIndex == fieldIndex) return value;
+	}
+	return nullptr;
 }
 
 Il2CppType* GetTypeFromIndex(IFile* il2cppBinary, Il2CppMetadataRegistration metadataRegistration, int index) {
@@ -103,12 +107,12 @@ std::vector<Il2cppImageData> ParseMetadata(std::vector<BYTE>& metadataBytes, IFi
 			// handle type based on what it is
 			if ((typeDef->bitfield >> 1) & 0x1) { // 2nd bit is 1 = enum
 				currClass.type = ClassType::ENUM;
-				for (int i = typeDef->fieldStart; i < typeDef->fieldStart + typeDef->field_count; i++) {
+				for (int fieldIndex = typeDef->fieldStart; fieldIndex < typeDef->fieldStart + typeDef->field_count; fieldIndex++) {
 					FieldData fieldData;
-					TFieldDef* field = GetFieldInfoFromIndex<THeader, TFieldDef>(header, i);
+					TFieldDef* field = GetFieldInfoFromIndex<THeader, TFieldDef>(header, fieldIndex);
 					Il2CppType* fieldType = GetTypeFromIndex(il2cppBinary, metadataRegistration, field->typeIndex);
 
-					Il2CppFieldDefaultValue* defaultVal = GetFieldDefaultValueStruct<THeader>(header, i);
+					Il2CppFieldDefaultValue* defaultVal = GetFieldDefaultValueStruct<THeader>(header, fieldIndex);
 					if (!(fieldType->attrs & FIELD_ATTRIBUTE_LITERAL && defaultVal->dataIndex != -1)) continue;
 
 					fieldData.name = ReplaceInvalidCharacters(GetStringFromIndex<THeader>(header, field->nameIndex));
