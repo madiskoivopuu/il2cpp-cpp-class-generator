@@ -1,11 +1,13 @@
 #pragma once
 #include "metadata-const.h"
 
+#define METADATA_COMPILED_VERSION "24.5"
+
 struct Il2CppImage;
 struct Il2CppType;
 struct Il2CppTypeDefinitionMetadata;
 
-struct Il2CppTypeDefinition_v24_3
+struct Il2CppTypeDefinition
 {
     StringIndex nameIndex;
     StringIndex namespaceIndex;
@@ -50,27 +52,26 @@ struct Il2CppTypeDefinition_v24_3
     uint32_t token;
 };
 
-struct Il2CppFieldDefinition_v24_3
+struct Il2CppFieldDefinition
 {
     StringIndex nameIndex;
     TypeIndex typeIndex;
     uint32_t token;
 };
 
-struct Il2CppParameterDefinition_v24_3
+struct Il2CppParameterDefinition
 {
     StringIndex nameIndex;
     uint32_t token;
     TypeIndex typeIndex;
 };
 
-struct Il2CppMethodDefinition_v24_3
+struct Il2CppMethodDefinition
 {
     StringIndex nameIndex;
     TypeDefinitionIndex declaringType;
     TypeIndex returnType;
     ParameterIndex parameterStart;
-    CustomAttributeIndex customAttributeIndex;
     GenericContainerIndex genericContainerIndex;
     uint32_t token;
     uint16_t flags;
@@ -79,7 +80,7 @@ struct Il2CppMethodDefinition_v24_3
     uint16_t parameterCount;
 };
 
-struct Il2CppEventDefinition_v24_3
+struct Il2CppEventDefinition
 {
     StringIndex nameIndex;
     TypeIndex typeIndex;
@@ -89,7 +90,7 @@ struct Il2CppEventDefinition_v24_3
     uint32_t token;
 };
 
-struct Il2CppPropertyDefinition_v24_3
+struct Il2CppPropertyDefinition
 {
     StringIndex nameIndex;
     MethodIndex get;
@@ -98,11 +99,10 @@ struct Il2CppPropertyDefinition_v24_3
     uint32_t token;
 };
 
-struct Il2CppAssemblyNameDefinition_v24_3
+struct Il2CppAssemblyNameDefinition
 {
     StringIndex nameIndex;
     StringIndex cultureIndex;
-    StringIndex hashValueIndex;
     StringIndex publicKeyIndex;
     uint32_t hash_alg;
     int32_t hash_len;
@@ -114,7 +114,7 @@ struct Il2CppAssemblyNameDefinition_v24_3
     uint8_t public_key_token[PUBLIC_KEY_BYTE_LENGTH];
 };
 
-struct Il2CppImageDefinition_v24_3
+struct Il2CppImageDefinition
 {
     StringIndex nameIndex;
     AssemblyIndex assemblyIndex;
@@ -132,23 +132,23 @@ struct Il2CppImageDefinition_v24_3
     uint32_t customAttributeCount;
 };
 
-struct Il2CppAssemblyDefinition_v24_3
+struct Il2CppAssemblyDefinition
 {
     ImageIndex imageIndex;
     uint32_t token;
     int32_t referencedAssemblyStart;
     int32_t referencedAssemblyCount;
-    Il2CppAssemblyNameDefinition_v24_3 aname;
+    Il2CppAssemblyNameDefinition aname;
 };
 
-struct Il2CppCustomAttributeTypeRange_v24_3
+struct Il2CppCustomAttributeTypeRange
 {
     uint32_t token;
     int32_t start;
     int32_t count;
 };
 
-struct Il2CppGlobalMetadataHeader_v24_3
+struct Il2CppGlobalMetadataHeader
 {
     int32_t sanity;
     int32_t version;

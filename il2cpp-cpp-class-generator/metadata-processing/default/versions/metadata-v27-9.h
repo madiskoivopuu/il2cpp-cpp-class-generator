@@ -1,20 +1,26 @@
 #pragma once
 #include "metadata-const.h"
 
+#define METADATA_COMPILED_VERSION "27.9"
+
 struct Il2CppImage;
 struct Il2CppType;
 struct Il2CppTypeDefinitionMetadata;
 
-struct Il2CppTypeDefinition_v24_2
+struct Il2CppTypeDefinition
 {
     StringIndex nameIndex;
     StringIndex namespaceIndex;
+    CustomAttributeIndex customAttributeIndex;
     TypeIndex byvalTypeIndex;
     TypeIndex byrefTypeIndex;
 
     TypeIndex declaringTypeIndex;
     TypeIndex parentIndex;
     TypeIndex elementTypeIndex; // we can probably remove this one. Only used for enums
+
+    RGCTXIndex rgctxStartIndex;
+    int32_t rgctxCount;
 
     GenericContainerIndex genericContainerIndex;
 
@@ -50,36 +56,36 @@ struct Il2CppTypeDefinition_v24_2
     uint32_t token;
 };
 
-struct Il2CppFieldDefinition_v24_2
+struct Il2CppFieldDefinition
 {
     StringIndex nameIndex;
     TypeIndex typeIndex;
     uint32_t token;
 };
 
-struct Il2CppParameterDefinition_v24_2
+struct Il2CppParameterDefinition
 {
     StringIndex nameIndex;
     uint32_t token;
+    CustomAttributeIndex customAttributeIndex;
     TypeIndex typeIndex;
 };
 
-struct Il2CppMethodDefinition_v24_2
+typedef struct Il2CppMethodDefinition
 {
     StringIndex nameIndex;
     TypeDefinitionIndex declaringType;
     TypeIndex returnType;
     ParameterIndex parameterStart;
-    CustomAttributeIndex customAttributeIndex;
     GenericContainerIndex genericContainerIndex;
     uint32_t token;
     uint16_t flags;
     uint16_t iflags;
     uint16_t slot;
     uint16_t parameterCount;
-};
+} Il2CppMethodDefinition;
 
-struct Il2CppEventDefinition_v24_2
+struct Il2CppEventDefinition
 {
     StringIndex nameIndex;
     TypeIndex typeIndex;
@@ -89,20 +95,20 @@ struct Il2CppEventDefinition_v24_2
     uint32_t token;
 };
 
-struct Il2CppPropertyDefinition_v24_2
+struct Il2CppPropertyDefinition
 {
     StringIndex nameIndex;
     MethodIndex get;
     MethodIndex set;
     uint32_t attrs;
+    CustomAttributeIndex customAttributeIndex;
     uint32_t token;
 };
 
-struct Il2CppAssemblyNameDefinition_v24_2
+struct Il2CppAssemblyNameDefinition
 {
     StringIndex nameIndex;
     StringIndex cultureIndex;
-    StringIndex hashValueIndex;
     StringIndex publicKeyIndex;
     uint32_t hash_alg;
     int32_t hash_len;
@@ -114,7 +120,7 @@ struct Il2CppAssemblyNameDefinition_v24_2
     uint8_t public_key_token[PUBLIC_KEY_BYTE_LENGTH];
 };
 
-struct Il2CppImageDefinition_v24_2
+struct Il2CppImageDefinition
 {
     StringIndex nameIndex;
     AssemblyIndex assemblyIndex;
@@ -127,28 +133,25 @@ struct Il2CppImageDefinition_v24_2
 
     MethodIndex entryPointIndex;
     uint32_t token;
-
-    int32_t customAttributeStart;
-    uint32_t customAttributeCount;
 };
 
-struct Il2CppAssemblyDefinition_v24_2
+struct Il2CppAssemblyDefinition
 {
     ImageIndex imageIndex;
     uint32_t token;
     int32_t referencedAssemblyStart;
     int32_t referencedAssemblyCount;
-    Il2CppAssemblyNameDefinition_v24_2 aname;
+    Il2CppAssemblyNameDefinition aname;
 };
 
-struct Il2CppCustomAttributeTypeRange_v24_2
+struct Il2CppCustomAttributeTypeRange
 {
     uint32_t token;
     int32_t start;
     int32_t count;
 };
 
-struct Il2CppGlobalMetadataHeader_v24_2
+struct Il2CppGlobalMetadataHeader
 {
     int32_t sanity;
     int32_t version;
@@ -192,14 +195,12 @@ struct Il2CppGlobalMetadataHeader_v24_2
     int32_t interfaceOffsetsCount;
     int32_t typeDefinitionsOffset; // Il2CppTypeDefinition
     int32_t typeDefinitionsCount;
+    int32_t rgctxEntriesOffset; // Il2CppRGCTXDefinition
+    int32_t rgctxEntriesCount;
     int32_t imagesOffset; // Il2CppImageDefinition
     int32_t imagesCount;
     int32_t assembliesOffset; // Il2CppAssemblyDefinition
     int32_t assembliesCount;
-    int32_t metadataUsageListsOffset; // Il2CppMetadataUsageList
-    int32_t metadataUsageListsCount;
-    int32_t metadataUsagePairsOffset; // Il2CppMetadataUsagePair
-    int32_t metadataUsagePairsCount;
     int32_t fieldRefsOffset; // Il2CppFieldRef
     int32_t fieldRefsCount;
     int32_t referencedAssembliesOffset; // int32_t
@@ -214,6 +215,8 @@ struct Il2CppGlobalMetadataHeader_v24_2
     int32_t unresolvedVirtualCallParameterRangesCount;
     int32_t windowsRuntimeTypeNamesOffset; // Il2CppWindowsRuntimeTypeNamePair
     int32_t windowsRuntimeTypeNamesSize;
+    const char* windowsRuntimeStringsOffset;
+    int32_t windowsRuntimeStringsSize;
     int32_t exportedTypeDefinitionsOffset; // TypeDefinitionIndex
     int32_t exportedTypeDefinitionsCount;
 };

@@ -30,6 +30,9 @@
     <ClCompile Include="utils\filetypes\PE.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="dev.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="class-generator\typeinfo.h">
@@ -99,6 +102,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="utils\filetypes\IFile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="metadata-processing\default\metadata-file\metadata.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dev.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

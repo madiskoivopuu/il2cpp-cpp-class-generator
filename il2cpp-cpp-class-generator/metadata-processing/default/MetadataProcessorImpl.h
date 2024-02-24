@@ -8,20 +8,6 @@
 #include <vector>
 #include <unordered_map>
 
-// Template macros
-#define IL2CPP_TEMPLATES_V23_0 Il2CppGlobalMetadataHeader_v24_0, Il2CppImageDefinition_v24_0, Il2CppTypeDefinition_v24_0, Il2CppFieldDefinition_v24_0
-#define IL2CPP_TEMPLATES_V24_0 Il2CppGlobalMetadataHeader_v24_0, Il2CppImageDefinition_v24_0, Il2CppTypeDefinition_v24_0, Il2CppFieldDefinition_v24_0
-#define IL2CPP_TEMPLATES_V24_1 Il2CppGlobalMetadataHeader_v24_1, Il2CppImageDefinition_v24_1, Il2CppTypeDefinition_v24_1, Il2CppFieldDefinition_v24_1
-#define IL2CPP_TEMPLATES_V24_15 Il2CppGlobalMetadataHeader_v24_15, Il2CppImageDefinition_v24_15, Il2CppTypeDefinition_v24_15, Il2CppFieldDefinition_v24_15
-#define IL2CPP_TEMPLATES_V24_2 Il2CppGlobalMetadataHeader_v24_2, Il2CppImageDefinition_v24_2, Il2CppTypeDefinition_v24_2, Il2CppFieldDefinition_v24_2
-#define IL2CPP_TEMPLATES_V24_3 Il2CppGlobalMetadataHeader_v24_3, Il2CppImageDefinition_v24_3, Il2CppTypeDefinition_v24_3, Il2CppFieldDefinition_v24_3
-#define IL2CPP_TEMPLATES_V24_4 Il2CppGlobalMetadataHeader_v24_4, Il2CppImageDefinition_v24_4, Il2CppTypeDefinition_v24_4, Il2CppFieldDefinition_v24_4
-#define IL2CPP_TEMPLATES_V24_5 Il2CppGlobalMetadataHeader_v24_5, Il2CppImageDefinition_v24_5, Il2CppTypeDefinition_v24_5, Il2CppFieldDefinition_v24_5
-#define IL2CPP_TEMPLATES_V27_0 Il2CppGlobalMetadataHeader_v27_0, Il2CppImageDefinition_v27_0, Il2CppTypeDefinition_v27_0, Il2CppFieldDefinition_v27_0
-#define IL2CPP_TEMPLATES_V27_1 Il2CppGlobalMetadataHeader_v27_1, Il2CppImageDefinition_v27_1, Il2CppTypeDefinition_v27_1, Il2CppFieldDefinition_v27_1
-#define IL2CPP_TEMPLATES_V27_9 Il2CppGlobalMetadataHeader_v27_9, Il2CppImageDefinition_v27_9, Il2CppTypeDefinition_v27_9, Il2CppFieldDefinition_v27_9
-#define IL2CPP_TEMPLATES_V29_0 Il2CppGlobalMetadataHeader_v29_0, Il2CppImageDefinition_v29_0, Il2CppTypeDefinition_v29_0, Il2CppFieldDefinition_v29_0
-
 // Our own helper functions
 std::unordered_map<char, char> invalidCharReplacements = {
 	{'.', '_'},
@@ -113,7 +99,7 @@ std::vector<Il2cppImageData> ParseMetadata(std::vector<BYTE>& metadataBytes, IFi
 					Il2CppType* fieldType = GetTypeFromIndex(il2cppBinary, metadataRegistration, field->typeIndex);
 
 					Il2CppFieldDefaultValue* defaultVal = GetFieldDefaultValueStruct<THeader>(header, fieldIndex);
-					if (!(fieldType->attrs & FIELD_ATTRIBUTE_LITERAL && defaultVal->dataIndex != -1)) continue;
+					if (!(fieldType->attrs & FIELD_ATTRIBUTE_LITERAL && defaultVal->dataIndex != -1)) continue; // check if value is const
 
 					fieldData.name = ReplaceInvalidCharacters(GetStringFromIndex<THeader>(header, field->nameIndex));
 					fieldData.type = fieldType->type;

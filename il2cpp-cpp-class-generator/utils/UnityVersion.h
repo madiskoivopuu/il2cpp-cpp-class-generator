@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include <vector>
+#include <string>
 #include <Windows.h>
 
 struct UnityVersion {
@@ -12,5 +13,5 @@ struct UnityVersion {
 #define UNITY_VERSION_GREATER_OR_EQUAL(unityVer, _major, _minor, _build) ((unityVer.major >= _major) && (unityVer.minor >= _minor) && (unityVer.build >= _build))
 
 bool GetUnityVersion(char* gameManPath, UnityVersion& unityVer);
-float MetadataVersionFromUnity(std::vector<BYTE> metadataBytes, UnityVersion unityVer);
+std::string MetadataVersionFromUnity(std::vector<BYTE> metadataBytes, UnityVersion unityVer);
 

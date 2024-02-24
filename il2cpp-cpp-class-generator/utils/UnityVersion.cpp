@@ -6,7 +6,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../metadata-processing/default/metadata-file/versions/metadata-v24-0.h"
+#include "../metadata-processing/default/metadata-file/metadata.h"
 
 void ReadUnityVersionBytes(char* fileBytes, int readIndex, UnityVersion& unityVer) {
 	char numBuffer[16] = {0};
@@ -64,50 +64,50 @@ bool GetUnityVersion(char* gameManPath, UnityVersion& unityVer) {
 	return true;
 }
 
-float MetadataVersionFromUnity(std::vector<BYTE> metadataBytes, UnityVersion unityVer) {
-    Il2CppGlobalMetadataHeader_v24_0* header = reinterpret_cast<Il2CppGlobalMetadataHeader_v24_0*>(metadataBytes.data());
+std::string MetadataVersionFromUnity(std::vector<BYTE> metadataBytes, UnityVersion unityVer) {
+    Il2CppGlobalMetadataHeader* header = reinterpret_cast<Il2CppGlobalMetadataHeader*>(metadataBytes.data());
     switch (header->version) {
     case 29:
-        if (UNITY_VERSION_GREATER_OR_EQUAL(unityVer, 2022, 1, 1)) { // v29.1 was more specifically added in a beta version 
-            return 29.1f;
+        if (UNITY_VERSION_GREATER_OR_EQUAL(unityVer, 2022, 1, 0)) { // v29.1 was more specifically added in a beta version 
+            return "29.1";
         }
-        return 29.0f;
+        return "29.0";
 
     case 27:
         if (UNITY_VERSION_GREATER_OR_EQUAL(unityVer, 2022, 2, 4)) {
-            return 27.1f;
+            return "27.1";
         }
-        return 27.0f;
+        return "27.0";
     case 24:
         if (UNITY_VERSION_GREATER_OR_EQUAL(unityVer, 2020, 1, 11)) {
-            return 24.4f;
+            return "24.4";
         }
         else if (UNITY_VERSION_GREATER_OR_EQUAL(unityVer, 2020, 0, 0)) {
-            return 24.3f;
+            return "24.3";
         }
         else if (UNITY_VERSION_GREATER_OR_EQUAL(unityVer, 2019, 4, 21)) {
-            return 24.5f;
+            return "24.5";
         }
         else if (UNITY_VERSION_GREATER_OR_EQUAL(unityVer, 2019, 4, 15)) {
-            return 24.4f;
+            return "24.4";
         }
         else if (UNITY_VERSION_GREATER_OR_EQUAL(unityVer, 2019, 3, 7)) {
-            return 24.3f;
+            return "24.3";
         }
         else if (UNITY_VERSION_GREATER_OR_EQUAL(unityVer, 2019, 0, 0)) {
-            return 24.2f;
+            return "24.2";
         }
         else if (UNITY_VERSION_GREATER_OR_EQUAL(unityVer, 2018, 4, 34)) {
-            return 24.15f;
+            return "24.15";
         }
         else if (UNITY_VERSION_GREATER_OR_EQUAL(unityVer, 2018, 3, 0)) {
-            return 24.1f;
+            return "24.1";
         }
         else {
-            return 24.0f;
+            return "24.0";
         }
         break;
     default:
-        return static_cast<float>(header->version);
+        return std::to_string(header->version).append(".0"); // always formats as XX.0 
     }
 }

@@ -3,14 +3,12 @@
 #include <vector>
 #include <Windows.h>
 
-#include "../../../utils/FileHelper.h"
-#include "../../../utils/filetypes/IFile.h"
-#include "../metadata-file/versions/metadata-v24-0.h"
-#include "../metadata-file/versions/metadata-v24-15.h"
-#include "../metadata-file/versions/metadata-v24-5.h"
-#include "../metadata-file/versions/metadata-v29-0.h"
-#include "../metadata-file/versions/metadata-v24-0.h"
-#include "../../../il2cpp/il2cpp-binarystructs.h"
+#include "../../utils/FileHelper.h"
+#include "../../utils/filetypes/IFile.h"
+#include "metadata.h"
+#include "../../il2cpp/il2cpp-binarystructs.h"
+
+struct Il2CppGlobalMetadataHeader;
 
 struct Il2CppMetadataRegistration
 {
@@ -32,4 +30,4 @@ struct Il2CppMetadataRegistration
     int32_t** metadataUsages;
 };
 
-Il2CppMetadataRegistration GetMedatataRegistration(IFile* il2cppBytes, Il2CppGlobalMetadataHeader_v24_0* header, float metadataVersion);
+Il2CppMetadataRegistration PatternScanMetadataRegistration(IFile* il2cppBytes, Il2CppGlobalMetadataHeader* header);

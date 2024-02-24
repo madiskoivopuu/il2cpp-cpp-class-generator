@@ -5,19 +5,9 @@
 #include <Windows.h>
 #include <commdlg.h>
 
-#include "metadata-processing/default/metadata-file/versions/metadata-v23-0.h"
-#include "metadata-processing/default/metadata-file/versions/metadata-v24-0.h"
-#include "metadata-processing/default/metadata-file/versions/metadata-v24-1.h"
-#include "metadata-processing/default/metadata-file/versions/metadata-v24-15.h"
-#include "metadata-processing/default/metadata-file/versions/metadata-v24-2.h"
-#include "metadata-processing/default/metadata-file/versions/metadata-v24-3.h"
-#include "metadata-processing/default/metadata-file/versions/metadata-v24-4.h"
-#include "metadata-processing/default/metadata-file/versions/metadata-v24-5.h"
-#include "metadata-processing/default/metadata-file/versions/metadata-v27-0.h"
-#include "metadata-processing/default/metadata-file/versions/metadata-v27-1.h"
-#include "metadata-processing/default/metadata-file/versions/metadata-v27-9.h"
-#include "metadata-processing/default/metadata-file/versions/metadata-v29-0.h"
-#include "metadata-processing/default/metadata-file/MetadataProcessorImpl.h"
+#include "dev.h"
+
+#include "metadata-processing/default/metadata-file/metadata.h"
 
 #include "metadata-processing/default/metadata-registration/MetadataRegistration.h"
 
@@ -65,12 +55,15 @@ int main()
         std::cin.get();
         return 0;
     }
-    std::cout << "Choose your globalgamemanagers file..." << std::endl;
+    
+    // TODO: maybe remove in the future
+    std::cout << "Choose your globalgamemanagers/unity default resources file..." << std::endl;
     if (!GetUserSelectedFileLoc(gameManLoc)) {
         std::cout << "Selection failed, exiting..." << std::endl;
         std::cin.get();
         return 0;
     }
+
 
     // Load il2cpp dll/so and check if the binary is built for the same architecture (32/64 bit) as this executable
     std::vector<BYTE> il2cppBytes = LoadFileAsBinary(il2cppLoc);
@@ -107,89 +100,21 @@ int main()
         return 0;
     }
 
-    Il2CppGlobalMetadataHeader_v24_0* header = reinterpret_cast<Il2CppGlobalMetadataHeader_v24_0*>(metadataBytes.data());
+    Il2CppGlobalMetadataHeader* header = reinterpret_cast<Il2CppGlobalMetadataHeader*>(metadataBytes.data());
     if (header->sanity != 0xFAB11BAF) {
         std::cout << "Invalid sanity number for metadata file." << std::endl;
         std::cin.get();
         return 0;
     }
 
-    // unity version detection
-    UnityVersion version = { 0 };
-    if (!GetUnityVersion(gameManLoc, version)) {
-        std::cout << "Failed to get unity version from provided globalgamemanagers." << std::endl;
-        std::cin.get();
-        return 0;
-    }
+    UnityVersion ver = { };
+    GetUnityVersion(gameManLoc, ver);
+    std::string metadataVer = MetadataVersionFromUnity(metadataBytes, ver);
 
-   Il2CppMetadataRegistration metadataRegistration = GetMedatataRegistration(il2cppBinary, header, MetadataVersionFromUnity(metadataBytes, version));
+   Il2CppMetadataRegistration metadataRegistration = PatternScanMetadataRegistration(il2cppBinary, header);
     if(metadataRegistration.genericClassesCount == -1) {
         std::cout << "Couldn't find the pointer to metadata registration inside GameAssembly.dll/libil2cpp.so." << std::endl;
         std::cin.get();
-        return 0;
-    }
-
-    // now we parse the metadata based on the version
-    std::vector<Il2cppImageData> classesData;
-    switch (header->version) {
-    case 29:
-        if (UNITY_VERSION_GREATER_OR_EQUAL(version, 2022, 1, 1)) { // v29.1 was more specifically added in a beta version 
-            std::cout << "Metadata v29.1 parsing not implemented yet" << std::endl;
-            return 0;
-        }
-        classesData = ParseMetadata<IL2CPP_TEMPLATES_V29_0>(metadataBytes, il2cppBinary, metadataRegistration);
-        break;
-    
-    case 28:
-        classesData = ParseMetadata<IL2CPP_TEMPLATES_V27_9>(metadataBytes, il2cppBinary, metadataRegistration);
-        break;
-    case 27:
-        if (UNITY_VERSION_GREATER_OR_EQUAL(version, 2022, 2, 4)) { // v27.1
-            classesData = ParseMetadata<IL2CPP_TEMPLATES_V27_1>(metadataBytes, il2cppBinary, metadataRegistration);
-        }
-        else { // v27.0
-            classesData = ParseMetadata<IL2CPP_TEMPLATES_V27_0>(metadataBytes, il2cppBinary, metadataRegistration);
-        }
-        break;
-        // v27.9??
-    case 26: 
-    case 25:
-        classesData = ParseMetadata<IL2CPP_TEMPLATES_V24_5>(metadataBytes, il2cppBinary, metadataRegistration);
-        break;
-    case 24:
-        if (UNITY_VERSION_GREATER_OR_EQUAL(version, 2020, 1, 11)) { // v24.4
-            classesData = ParseMetadata<IL2CPP_TEMPLATES_V24_5>(metadataBytes, il2cppBinary, metadataRegistration);
-        }
-        else if (UNITY_VERSION_GREATER_OR_EQUAL(version, 2020, 0, 0)) { // v24.3
-            classesData = ParseMetadata<IL2CPP_TEMPLATES_V24_3>(metadataBytes, il2cppBinary, metadataRegistration);
-        }
-        else if (UNITY_VERSION_GREATER_OR_EQUAL(version, 2019, 4, 21)) { // v24.5
-            classesData = ParseMetadata<IL2CPP_TEMPLATES_V24_5>(metadataBytes, il2cppBinary, metadataRegistration);
-        }
-        else if (UNITY_VERSION_GREATER_OR_EQUAL(version, 2019, 4, 15)) { // v24.4
-            classesData = ParseMetadata<IL2CPP_TEMPLATES_V24_4>(metadataBytes, il2cppBinary, metadataRegistration);
-        }
-        else if (UNITY_VERSION_GREATER_OR_EQUAL(version, 2019, 3, 7)) { // v24.3
-            classesData = ParseMetadata<IL2CPP_TEMPLATES_V24_3>(metadataBytes, il2cppBinary, metadataRegistration);
-        }
-        else if (UNITY_VERSION_GREATER_OR_EQUAL(version, 2019, 0, 0)) { // v24.2
-            classesData = ParseMetadata<IL2CPP_TEMPLATES_V24_2>(metadataBytes, il2cppBinary, metadataRegistration);
-        }
-        else if (UNITY_VERSION_GREATER_OR_EQUAL(version, 2018, 4, 34)) { // v24.15
-            classesData = ParseMetadata<IL2CPP_TEMPLATES_V24_15>(metadataBytes, il2cppBinary, metadataRegistration);
-        }
-        else if (UNITY_VERSION_GREATER_OR_EQUAL(version, 2018, 3, 0)) { // v24.1
-            classesData = ParseMetadata<IL2CPP_TEMPLATES_V24_1>(metadataBytes, il2cppBinary, metadataRegistration);
-        }
-        else { // v24
-            classesData = ParseMetadata<IL2CPP_TEMPLATES_V24_0>(metadataBytes, il2cppBinary, metadataRegistration);
-        }
-        break;
-    case 23:
-        classesData = ParseMetadata<IL2CPP_TEMPLATES_V23_0>(metadataBytes, il2cppBinary, metadataRegistration);
-        break;
-    default:
-        std::cout << "Unsupported metadata version " << header->version << std::endl;
         return 0;
     }
 
