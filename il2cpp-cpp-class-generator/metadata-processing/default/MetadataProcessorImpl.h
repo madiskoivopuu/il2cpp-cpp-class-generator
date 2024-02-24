@@ -1,54 +1,16 @@
 #pragma once
-#include "../../../class-generator/typeinfo.h"
-#include "../../../il2cpp/il2cpp-tabledefs.h"
-#include "../../../il2cpp/il2cpp-binarystructs.h"
-#include "../metadata-registration/MetadataRegistration.h"
-#include "../../../utils/filetypes/IFile.h"
+#include "../../class-generator/typeinfo.h"
+#include "../../il2cpp/il2cpp-tabledefs.h"
+#include "../../il2cpp/il2cpp-binarystructs.h"
+#include "../../utils/filetypes/IFile.h"
+
+#include "metadata.h"
+#include "MetadataHelpers.h"
+#include "MetadataRegistration.h"
 
 #include <vector>
 #include <unordered_map>
-
-// Our own helper functions
-std::unordered_map<char, char> invalidCharReplacements = {
-	{'.', '_'},
-	{'<', '_'},
-	{'>', '_'},
-	{'\n', '_'}
-};
-char* ReplaceInvalidCharacters(char* string) {
-	for (int i = 0; i < strlen(string); i++) {
-		if (invalidCharReplacements.count(string[i])) { // invalid char found
-			string[i] = invalidCharReplacements[string[i]];
-		}
-	}
-	return string;
-}
-
-// Function declarations for different metadata versions
-template<typename THeader>
-char* GetStringFromIndex(THeader* header, int index) {
-	char* strings = ((char*)header + header->stringOffset) + index;
-	return strings;
-}
-
-template<typename THeader, typename TImgDef>
-TImgDef* GetImageFromIndex(THeader* header, int index) {
-	return reinterpret_cast<TImgDef*>((char*)header + header->imagesOffset) + index;
-}
-
-
-template<typename THeader, typename TFieldDef>
-TFieldDef* GetFieldInfoFromIndex(THeader* header, int index) {
-	return reinterpret_cast<TFieldDef*>((char*)header + header->fieldsOffset) + index;
-}
-
-template<typename THeader, typename TPropDef>
-TPropDef* GetPropInfoFromIndex(THeader* header, int index) {
-	return reinterpret_cast<TPropDef*>((char*)header + header->propertiesOffset) + index;
-}
-
-template<typename THeader>
-Il2CppFieldDefaultValue* GetFieldDefaultValueStruct(THeader* header, int fieldIndex) {
+Il2CppFieldDefaultValue* GetFieldDefaultValueStruct(Il2CppGlobalMetadataHeader* header, int fieldIndex) {
 	Il2CppFieldDefaultValue* first = reinterpret_cast<Il2CppFieldDefaultValue*>((char*)header + header->fieldDefaultValuesOffset);
 	for (Il2CppFieldDefaultValue* value = first; value < first + header->fieldDefaultValuesCount; value++) { // TODO: cache these values beforehand so we dont have to loop every single time
 		if (value->fieldIndex == fieldIndex) return value;
@@ -57,8 +19,8 @@ Il2CppFieldDefaultValue* GetFieldDefaultValueStruct(THeader* header, int fieldIn
 }
 
 Il2CppType* GetTypeFromIndex(IFile* il2cppBinary, Il2CppMetadataRegistration metadataRegistration, int index) {
-	uintptr_t actualTypesOffset = il2cppBinary->MapVAToOffset(reinterpret_cast<uintptr_t>(metadataRegistration.types));
-	uintptr_t typeVirtualAddrPtr = *(reinterpret_cast<uintptr_t*>(il2cppBinary->fileBytes.data() + actualTypesOffset) + index);
+	uintptr_t typesOffsetFromFileStart = il2cppBinary->MapVAToOffset(reinterpret_cast<uintptr_t>(metadataRegistration.types));
+	uintptr_t typeVirtualAddrPtr = *(reinterpret_cast<uintptr_t*>(il2cppBinary->fileBytes.data() + typesOffsetFromFileStart) + index);
 	return reinterpret_cast<Il2CppType*>(il2cppBinary->fileBytes.data() + il2cppBinary->MapVAToOffset(typeVirtualAddrPtr));
 }
 
