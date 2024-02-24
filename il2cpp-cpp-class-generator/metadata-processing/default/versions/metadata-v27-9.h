@@ -11,16 +11,11 @@ struct Il2CppTypeDefinition
 {
     StringIndex nameIndex;
     StringIndex namespaceIndex;
-    CustomAttributeIndex customAttributeIndex;
     TypeIndex byvalTypeIndex;
-    TypeIndex byrefTypeIndex;
 
     TypeIndex declaringTypeIndex;
     TypeIndex parentIndex;
     TypeIndex elementTypeIndex; // we can probably remove this one. Only used for enums
-
-    RGCTXIndex rgctxStartIndex;
-    int32_t rgctxCount;
 
     GenericContainerIndex genericContainerIndex;
 
@@ -67,11 +62,10 @@ struct Il2CppParameterDefinition
 {
     StringIndex nameIndex;
     uint32_t token;
-    CustomAttributeIndex customAttributeIndex;
     TypeIndex typeIndex;
 };
 
-typedef struct Il2CppMethodDefinition
+struct Il2CppMethodDefinition
 {
     StringIndex nameIndex;
     TypeDefinitionIndex declaringType;
@@ -83,7 +77,7 @@ typedef struct Il2CppMethodDefinition
     uint16_t iflags;
     uint16_t slot;
     uint16_t parameterCount;
-} Il2CppMethodDefinition;
+};
 
 struct Il2CppEventDefinition
 {
@@ -101,7 +95,6 @@ struct Il2CppPropertyDefinition
     MethodIndex get;
     MethodIndex set;
     uint32_t attrs;
-    CustomAttributeIndex customAttributeIndex;
     uint32_t token;
 };
 
@@ -133,6 +126,9 @@ struct Il2CppImageDefinition
 
     MethodIndex entryPointIndex;
     uint32_t token;
+
+    int32_t customAttributeStart;
+    uint32_t customAttributeCount;
 };
 
 struct Il2CppAssemblyDefinition
@@ -148,7 +144,6 @@ struct Il2CppCustomAttributeTypeRange
 {
     uint32_t token;
     int32_t start;
-    int32_t count;
 };
 
 struct Il2CppGlobalMetadataHeader
@@ -195,8 +190,6 @@ struct Il2CppGlobalMetadataHeader
     int32_t interfaceOffsetsCount;
     int32_t typeDefinitionsOffset; // Il2CppTypeDefinition
     int32_t typeDefinitionsCount;
-    int32_t rgctxEntriesOffset; // Il2CppRGCTXDefinition
-    int32_t rgctxEntriesCount;
     int32_t imagesOffset; // Il2CppImageDefinition
     int32_t imagesCount;
     int32_t assembliesOffset; // Il2CppAssemblyDefinition
@@ -205,10 +198,10 @@ struct Il2CppGlobalMetadataHeader
     int32_t fieldRefsCount;
     int32_t referencedAssembliesOffset; // int32_t
     int32_t referencedAssembliesCount;
-    int32_t attributesInfoOffset; // Il2CppCustomAttributeTypeRange
-    int32_t attributesInfoCount;
-    int32_t attributeTypesOffset; // TypeIndex
-    int32_t attributeTypesCount;
+    int32_t attributeDataOffset; //uint8_t
+    int32_t attributeDataCount;
+    int32_t attributeDataRangeOffset; //Il2CppCustomAttributeDataRange
+    int32_t attributeDataRangeCount;
     int32_t unresolvedVirtualCallParameterTypesOffset; // TypeIndex
     int32_t unresolvedVirtualCallParameterTypesCount;
     int32_t unresolvedVirtualCallParameterRangesOffset; // Il2CppRange

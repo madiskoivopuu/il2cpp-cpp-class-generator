@@ -144,7 +144,6 @@ struct Il2CppCustomAttributeTypeRange
 {
     uint32_t token;
     int32_t start;
-    int32_t count;
 };
 
 struct Il2CppGlobalMetadataHeader
@@ -191,8 +190,6 @@ struct Il2CppGlobalMetadataHeader
     int32_t interfaceOffsetsCount;
     int32_t typeDefinitionsOffset; // Il2CppTypeDefinition
     int32_t typeDefinitionsCount;
-    int32_t rgctxEntriesOffset; // Il2CppRGCTXDefinition
-    int32_t rgctxEntriesCount;
     int32_t imagesOffset; // Il2CppImageDefinition
     int32_t imagesCount;
     int32_t assembliesOffset; // Il2CppAssemblyDefinition
@@ -201,10 +198,10 @@ struct Il2CppGlobalMetadataHeader
     int32_t fieldRefsCount;
     int32_t referencedAssembliesOffset; // int32_t
     int32_t referencedAssembliesCount;
-    int32_t attributesInfoOffset; // Il2CppCustomAttributeTypeRange
-    int32_t attributesInfoCount;
-    int32_t attributeTypesOffset; // TypeIndex
-    int32_t attributeTypesCount;
+    int32_t attributeDataOffset; //uint8_t
+    int32_t attributeDataCount;
+    int32_t attributeDataRangeOffset; //Il2CppCustomAttributeDataRange
+    int32_t attributeDataRangeCount;
     int32_t unresolvedVirtualCallParameterTypesOffset; // TypeIndex
     int32_t unresolvedVirtualCallParameterTypesCount;
     int32_t unresolvedVirtualCallParameterRangesOffset; // Il2CppRange
