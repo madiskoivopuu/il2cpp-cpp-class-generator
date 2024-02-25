@@ -1,8 +1,6 @@
 #include "PE.h"
 
-PE::PE(std::vector<BYTE>& bytes, FileInformation info) 
-	: sections(), dosHeader({}), imageNTHeaders({})
-{
+PE::PE(std::vector<BYTE>& bytes, FileInformation info) : sections({}) {
 	this->fileBytes = bytes;
 	this->info = info;
 

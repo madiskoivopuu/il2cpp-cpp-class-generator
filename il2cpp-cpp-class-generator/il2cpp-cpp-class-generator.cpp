@@ -14,6 +14,7 @@
 #include "utils/UnityVersion.h"
 #include "utils/FileHelper.h"
 #include "utils/filetypes/PE.h"
+#include "utils/filetypes/ELF.h"
 
 #ifdef _WIN64
 #define CURRENT_ARCH FileArch::B64
@@ -73,21 +74,24 @@ int main()
     }
 
     FileInformation fileInfo = GetFileInfoFromFileBytes(il2cppBytes);
-    IFile* il2cppBinary = nullptr;
-    switch(fileInfo.format) {
-    case FileType::PE:
-        il2cppBinary = new PE(il2cppBytes, fileInfo);
-        break;
-    default:
-        std::cout << "Cannot reverse the il2cpp binary since support hasn't been released for this file format yet." << std::endl;
-        return 0;
-    }
-
     if (fileInfo.arch != CURRENT_ARCH) {
         std::cout << "Cannot reverse the il2cpp binary since it isn't built for the same architecture (32/64 bits) as this executable. Please use the appropriate executable." << std::endl;
         std::cout << "Il2cpp binary: " << fileInfo.arch << " bits" << std::endl;
         std::cout << "Current executable: " << CURRENT_ARCH << " bits" << std::endl;
         std::cin.get();
+        return 0;
+    }
+
+    IFile* il2cppBinary = nullptr;
+    switch(fileInfo.format) {
+    case FileType::PE:
+        il2cppBinary = new PE(il2cppBytes, fileInfo);
+        break;
+    case FileType::ELF:
+        il2cppBinary = new ELF(il2cppBytes, fileInfo);
+        break;
+    default:
+        std::cout << "Cannot reverse the il2cpp binary since support hasn't been released for this file format yet." << std::endl;
         return 0;
     }
 

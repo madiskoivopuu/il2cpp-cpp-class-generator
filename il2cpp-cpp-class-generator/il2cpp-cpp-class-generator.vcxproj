@@ -132,6 +132,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="dev.cpp" />
+    <ClCompile Include="utils\filetypes\ELF.cpp" />
     <ClCompile Include="metadata-processing\default\MetadataRegistration.cpp" />
     <ClCompile Include="utils\FileHelper.cpp" />
     <ClCompile Include="il2cpp-cpp-class-generator.cpp" />
@@ -140,6 +141,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dev.h" />
+    <ClInclude Include="utils\filetypes\ELF.h" />
     <ClInclude Include="il2cpp\il2cpp-binarystructs.h" />
     <ClInclude Include="metadata-processing\default\metadata-file\metadata.h" />
     <ClInclude Include="metadata-processing\default\metadata.h" />
