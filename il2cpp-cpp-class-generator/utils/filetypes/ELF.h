@@ -48,8 +48,9 @@ struct ELFProgramHeader {
 };
 #endif
 
-class ELF : IFile
+class ELF : public IFile
 {
+public:
 	ELFHeader elfHeader;
 	std::vector<ELFProgramHeader> sections;
 
