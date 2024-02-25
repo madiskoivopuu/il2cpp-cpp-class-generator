@@ -132,6 +132,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="dev.cpp" />
+    <ClCompile Include="metadata-processing\default\MetadataRegistration.cpp" />
     <ClCompile Include="utils\FileHelper.cpp" />
     <ClCompile Include="il2cpp-cpp-class-generator.cpp" />
     <ClCompile Include="metadata-processing\default\metadata-registration\MetadataRegistration.cpp" />
@@ -142,6 +143,23 @@
     <ClInclude Include="dev.h" />
     <ClInclude Include="il2cpp\il2cpp-binarystructs.h" />
     <ClInclude Include="metadata-processing\default\metadata-file\metadata.h" />
+    <ClInclude Include="metadata-processing\default\metadata.h" />
+    <ClInclude Include="metadata-processing\default\MetadataHelpers.h" />
+    <ClInclude Include="metadata-processing\default\MetadataProcessor.cpp" />
+    <ClInclude Include="metadata-processing\default\MetadataRegistration.h" />
+    <ClInclude Include="metadata-processing\default\versions\metadata-const.h" />
+    <ClInclude Include="metadata-processing\default\versions\metadata-v23-0.h" />
+    <ClInclude Include="metadata-processing\default\versions\metadata-v24-0.h" />
+    <ClInclude Include="metadata-processing\default\versions\metadata-v24-1.h" />
+    <ClInclude Include="metadata-processing\default\versions\metadata-v24-15.h" />
+    <ClInclude Include="metadata-processing\default\versions\metadata-v24-2.h" />
+    <ClInclude Include="metadata-processing\default\versions\metadata-v24-3.h" />
+    <ClInclude Include="metadata-processing\default\versions\metadata-v24-4.h" />
+    <ClInclude Include="metadata-processing\default\versions\metadata-v24-5.h" />
+    <ClInclude Include="metadata-processing\default\versions\metadata-v27-0.h" />
+    <ClInclude Include="metadata-processing\default\versions\metadata-v27-1.h" />
+    <ClInclude Include="metadata-processing\default\versions\metadata-v27-9.h" />
+    <ClInclude Include="metadata-processing\default\versions\metadata-v29-0.h" />
     <ClInclude Include="utils\filetypes\IFile.h" />
     <ClInclude Include="utils\filetypes\PE.h" />
     <ClInclude Include="utils\FileHelper.h" />

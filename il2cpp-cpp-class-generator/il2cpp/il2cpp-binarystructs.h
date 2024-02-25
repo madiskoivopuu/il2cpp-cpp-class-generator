@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 enum Il2CppTypeEnum
 {
     IL2CPP_TYPE_END = 0x00,       /* End of List */
@@ -48,11 +50,11 @@ struct Il2CppType
     {
         // We have this dummy field first because pre C99 compilers (MSVC) can only initializer the first value in a union.
         void* dummy;
-        TypeDefinitionIndex klassIndex; /* for VALUETYPE and CLASS */
+        int32_t klassIndex; /* for VALUETYPE and CLASS */
         const Il2CppType* type;   /* for PTR and SZARRAY */
         void* array; /* Il2CppArrayType* for ARRAY */
         //MonoMethodSignature *method;
-        GenericParameterIndex genericParameterIndex; /* for VAR and MVAR */
+        int32_t genericParameterIndex; /* for VAR and MVAR */
         void* generic_class; /* Il2CppGenericClass* for GENERICINST */
     } data;
     unsigned int attrs : 16; /* param attributes or field flags */

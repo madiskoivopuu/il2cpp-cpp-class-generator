@@ -33,6 +33,9 @@
     <ClCompile Include="dev.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="metadata-processing\default\MetadataRegistration.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="class-generator\typeinfo.h">
@@ -108,6 +111,57 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="dev.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="metadata-processing\default\MetadataRegistration.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="metadata-processing\default\versions\metadata-v29-0.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="metadata-processing\default\metadata.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="metadata-processing\default\MetadataProcessor.cpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="metadata-processing\default\versions\metadata-v27-9.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="metadata-processing\default\versions\metadata-v27-1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="metadata-processing\default\versions\metadata-v27-0.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="metadata-processing\default\versions\metadata-v24-15.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="metadata-processing\default\versions\metadata-v24-5.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="metadata-processing\default\versions\metadata-v24-4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="metadata-processing\default\versions\metadata-v24-3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="metadata-processing\default\versions\metadata-v24-2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="metadata-processing\default\versions\metadata-v24-1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="metadata-processing\default\versions\metadata-v24-0.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="metadata-processing\default\versions\metadata-v23-0.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="metadata-processing\default\versions\metadata-const.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="metadata-processing\default\MetadataHelpers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
