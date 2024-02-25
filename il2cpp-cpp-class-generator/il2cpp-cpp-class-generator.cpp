@@ -7,9 +7,8 @@
 
 #include "dev.h"
 
-#include "metadata-processing/default/metadata-file/metadata.h"
-
-#include "metadata-processing/default/metadata-registration/MetadataRegistration.h"
+#include "metadata-processing/default/metadata.h"
+#include "metadata-processing/default/MetadataRegistration.h"
 
 #include "class-generator/typeinfo.h"
 #include "utils/UnityVersion.h"

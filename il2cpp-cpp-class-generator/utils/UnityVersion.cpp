@@ -6,8 +6,6 @@
 #include <iostream>
 #include <vector>
 
-#include "../metadata-processing/default/metadata-file/metadata.h"
-
 void ReadUnityVersionBytes(char* fileBytes, int readIndex, UnityVersion& unityVer) {
 	char numBuffer[16] = {0};
 	int currWriteIndex = 0;
@@ -65,8 +63,9 @@ bool GetUnityVersion(char* gameManPath, UnityVersion& unityVer) {
 }
 
 std::string MetadataVersionFromUnity(std::vector<BYTE> metadataBytes, UnityVersion unityVer) {
-    Il2CppGlobalMetadataHeader* header = reinterpret_cast<Il2CppGlobalMetadataHeader*>(metadataBytes.data());
-    switch (header->version) {
+    uint32_t* header = reinterpret_cast<uint32_t*>(metadataBytes.data());
+    uint32_t version = *(header + 1);
+    switch (version) {
     case 29:
         if (UNITY_VERSION_GREATER_OR_EQUAL(unityVer, 2022, 1, 0)) { // v29.1 was more specifically added in a beta version 
             return "29.1";
@@ -108,6 +107,6 @@ std::string MetadataVersionFromUnity(std::vector<BYTE> metadataBytes, UnityVersi
         }
         break;
     default:
-        return std::to_string(header->version).append(".0"); // always formats as XX.0 
+        return std::to_string(version).append(".0"); // always formats as XX.0 
     }
 }
