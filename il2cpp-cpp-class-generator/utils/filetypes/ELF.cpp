@@ -16,7 +16,7 @@ ELF::ELF(std::vector<BYTE>& bytes, FileInformation info) : sections({}) {
 uintptr_t ELF::MapVAToOffset(uintptr_t virtualAddress) {
 	for (const ELFProgramHeader& section : this->sections) {
 		if (section.p_vaddr <= virtualAddress && virtualAddress <= section.p_vaddr + section.p_filesz)
-			return virtualAddress - section.p_vaddr + section.p_paddr;
+			return virtualAddress - (section.p_vaddr - section.p_paddr);
 	}
 
 	return 0;
