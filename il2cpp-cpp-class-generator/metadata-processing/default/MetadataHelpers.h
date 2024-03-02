@@ -48,22 +48,35 @@ Il2CppParameterDefinition* GetParamInfoFromIndex(Il2CppGlobalMetadataHeader* hea
 }
 
 Il2CppFieldDefaultValue* GetFieldDefaultValueStruct(Il2CppGlobalMetadataHeader* header, int fieldIndex) {
-	Il2CppFieldDefaultValue* first = reinterpret_cast<Il2CppFieldDefaultValue*>((char*)header + header->fieldDefaultValuesOffset);
-	for (Il2CppFieldDefaultValue* value = first; value < first + header->fieldDefaultValuesCount; value++) { // TODO: cache these values beforehand so we dont have to loop every single time
-		if (value->fieldIndex == fieldIndex) 
-			return value;
+	// not the cleanest method to cache but it'll work
+	static std::unordered_map<int, Il2CppFieldDefaultValue*> cachedDefaultValues;
+	if (cachedDefaultValues.empty()) {
+		Il2CppFieldDefaultValue* first = reinterpret_cast<Il2CppFieldDefaultValue*>((char*)header + header->fieldDefaultValuesOffset);
+		for (Il2CppFieldDefaultValue* value = first; value < first + header->fieldDefaultValuesCount; value++)
+			cachedDefaultValues[value->fieldIndex] = value;
 	}
-	return nullptr;
+
+	std::unordered_map<int, Il2CppFieldDefaultValue*>::const_iterator iter = cachedDefaultValues.find(fieldIndex);
+	if (iter == cachedDefaultValues.end())
+		return nullptr;
+	else
+		return iter->second;
 }
 
 Il2CppParameterDefaultValue* GetParamDefaultValue(Il2CppGlobalMetadataHeader* header, int paramIndex) {
-	for (int defValueIdx = 0; defValueIdx < header->parameterDefaultValuesCount; defValueIdx++) {
-		Il2CppParameterDefaultValue* defValue = reinterpret_cast<Il2CppParameterDefaultValue*>((char*)header + header->parameterDefaultValuesOffset) + defValueIdx;
-		if (defValue->parameterIndex == paramIndex)
-			return defValue;
+	static std::unordered_map<int, Il2CppParameterDefaultValue*> cachedParamDefaultValues;
+	if (cachedParamDefaultValues.empty()) {
+		for (int defValueIdx = 0; defValueIdx < header->parameterDefaultValuesCount; defValueIdx++) {
+			Il2CppParameterDefaultValue* defValue = reinterpret_cast<Il2CppParameterDefaultValue*>((char*)header + header->parameterDefaultValuesOffset) + defValueIdx;
+			cachedParamDefaultValues[defValue->parameterIndex] = defValue;
+		}
 	}
 
-	return nullptr;
+	std::unordered_map<int, Il2CppParameterDefaultValue*>::const_iterator iter = cachedParamDefaultValues.find(paramIndex);
+	if (iter == cachedParamDefaultValues.end())
+		return nullptr;
+	else
+		return iter->second;
 }
 
 Il2CppType* GetTypeFromIndex(IFile* il2cppBinary, Il2CppMetadataRegistration* metadataRegistration, int index) {

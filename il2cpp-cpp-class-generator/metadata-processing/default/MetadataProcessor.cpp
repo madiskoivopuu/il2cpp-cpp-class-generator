@@ -1,12 +1,6 @@
 #pragma once
-#include "../../class-generator/typeinfo.h"
-#include "../../il2cpp/il2cpp-tabledefs.h"
-#include "../../il2cpp/il2cpp-binarystructs.h"
-#include "../../utils/filetypes/IFile.h"
-
-#include "metadata.h"
+#include "MetadataProcessor.h"
 #include "MetadataHelpers.h"
-#include "MetadataRegistration.h"
 
 #include <vector>
 #include <unordered_map>
@@ -32,13 +26,16 @@ std::vector<FieldData> ParseFieldsForType(MetadataState& state, Il2CppTypeDefini
 		fieldData.type = fieldType->type;
 
 		Il2CppFieldDefaultValue* defaultVal = GetFieldDefaultValueStruct(state.header, fieldIndex);
-		if (defaultVal) {
+		// somehow there's very large values in defaultVal->typeIndex sometimes, and negative ones too????
+		if (defaultVal && defaultVal->typeIndex >= 0 && defaultVal->typeIndex < state.metadataRegistration->typesCount) {
 			Il2CppType* defaultValueType = GetTypeFromIndex(state.il2cppBinary, state.metadataRegistration, defaultVal->typeIndex);
 			fieldData.defaultValuePtr = reinterpret_cast<uintptr_t>(reinterpret_cast<BYTE*>((char*)state.header + state.header->fieldAndParameterDefaultValueDataOffset) + defaultVal->dataIndex);
 			fieldData.defaultValueType = defaultValueType->type;
 		}
 		fields.push_back(fieldData);
 	}
+
+	return fields;
 }
 
 std::vector<MethodArgument> ParseMethodArguments(MetadataState& state, Il2CppMethodDefinition* methodDef) {
@@ -62,6 +59,8 @@ std::vector<MethodArgument> ParseMethodArguments(MetadataState& state, Il2CppMet
 
 		args.push_back(argData);
 	}
+
+	return args;
 }
 
 std::vector<MethodData> ParseMethodsForClass(MetadataState& state, Il2CppTypeDefinition* typeDef) {
@@ -92,7 +91,7 @@ TypeData ParseType(MetadataState& state, Il2CppTypeDefinition* typeDef) {
 	// handle type based on what it is
 	if (typeDef->bitfield & 0b10) // 2nd bit is 1 = enum
 		currType.type = ClassType::ENUM;
-
+		// idk but enums shouldn't have methods
 	else {
 		currType.type = ClassType::CLASS;
 		currType.methods = ParseMethodsForClass(state, typeDef);

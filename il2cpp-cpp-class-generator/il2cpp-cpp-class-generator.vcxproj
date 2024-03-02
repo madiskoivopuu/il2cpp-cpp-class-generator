@@ -132,6 +132,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="dev.cpp" />
+    <ClCompile Include="metadata-processing\default\MetadataProcessor.cpp" />
     <ClCompile Include="utils\filetypes\ELF.cpp" />
     <ClCompile Include="metadata-processing\default\MetadataRegistration.cpp" />
     <ClCompile Include="utils\FileHelper.cpp" />
@@ -141,12 +142,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dev.h" />
+    <ClInclude Include="metadata-processing\default\MetadataProcessor.h" />
     <ClInclude Include="utils\filetypes\ELF.h" />
     <ClInclude Include="il2cpp\il2cpp-binarystructs.h" />
     <ClInclude Include="metadata-processing\default\metadata-file\metadata.h" />
     <ClInclude Include="metadata-processing\default\metadata.h" />
     <ClInclude Include="metadata-processing\default\MetadataHelpers.h" />
-    <ClInclude Include="metadata-processing\default\MetadataProcessor.cpp" />
     <ClInclude Include="metadata-processing\default\MetadataRegistration.h" />
     <ClInclude Include="metadata-processing\default\versions\metadata-const.h" />
     <ClInclude Include="metadata-processing\default\versions\metadata-v23-0.h" />

@@ -7,8 +7,8 @@
 
 #include "dev.h"
 
-#include "metadata-processing/default/metadata.h"
-#include "metadata-processing/default/MetadataRegistration.h"
+#include "metadata-processing/default/MetadataProcessor.h"
+#include "utils/UnityVersion.h"
 
 #include "class-generator/typeinfo.h"
 #include "utils/UnityVersion.h"
@@ -64,7 +64,6 @@ int main()
         return 0;
     }
 
-
     // Load il2cpp dll/so and check if the binary is built for the same architecture (32/64 bit) as this executable
     std::vector<BYTE> il2cppBytes = LoadFileAsBinary(il2cppLoc);
     if (!il2cppBytes.size()) {
@@ -103,16 +102,18 @@ int main()
         return 0;
     }
 
+    UnityVersion ver = { };
+    GetUnityVersion(gameManLoc, ver);
+    std::string metadataVer = MetadataVersionFromUnity(metadataBytes, ver);
+    std::cout << "Detected metadata version as " << metadataVer << std::endl;
+    std::cout << "If this does not match " << METADATA_COMPILED_VERSION << " then recompile this program or use the one built for correct version." << std::endl;
+
     Il2CppGlobalMetadataHeader* header = reinterpret_cast<Il2CppGlobalMetadataHeader*>(metadataBytes.data());
     if (header->sanity != 0xFAB11BAF) {
         std::cout << "Invalid sanity number for metadata file." << std::endl;
         std::cin.get();
         return 0;
     }
-
-    UnityVersion ver = { };
-    GetUnityVersion(gameManLoc, ver);
-    std::string metadataVer = MetadataVersionFromUnity(metadataBytes, ver);
 
    Il2CppMetadataRegistration metadataRegistration = PatternScanMetadataRegistration(il2cppBinary, header);
     if(metadataRegistration.genericClassesCount == -1) {
@@ -121,6 +122,9 @@ int main()
         return 0;
     }
 
+    std::vector<Il2cppImageData> metadataParsed = ParseMetadata(metadataBytes, il2cppBinary, metadataRegistration);
+
+    delete il2cppBinary;
     return 0;
 }
 
