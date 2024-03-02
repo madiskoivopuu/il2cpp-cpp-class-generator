@@ -22,10 +22,6 @@ uint32_t CountMethods(Il2CppGlobalMetadataHeader* header) {
 	return methods;
 }
 
-uint32_t CountTypeDefs(Il2CppGlobalMetadataHeader* header) {
-
-}
-
 // Does a deeper check to whether a potential registration pointer contains plausible values for a real metadata registration
 bool CheckMetadataRegValidity(IFile* il2cppBinary, Il2CppMetadataRegistration* potential) {
 	if (potential->fieldOffsetsCount < 0
@@ -67,14 +63,13 @@ Il2CppMetadataRegistration PatternScanMetadataRegistration(IFile* il2cppBinary, 
 	for (; start <= end; start += sizeof(uintptr_t)) {
 		Il2CppMetadataRegistration* potential = reinterpret_cast<Il2CppMetadataRegistration*>(start);
 
+		// a few preliminary checks for finding the correct registration
 		if (potential->typeDefinitionsSizesCount != typeDefinitionsCount || potential->genericMethodTableCount > totalMethods)
 			continue;
 		if (header->version >= 27 && (potential->metadataUsages != nullptr || potential->metadataUsagesCount != 0))
 			continue;
 
-		// a few preliminary checks for finding the correct registration
-		if (potential->genericMethodTableCount <= totalMethods && potential->typeDefinitionsSizesCount != typeDefinitionsCount)
-			potentialMetadataRegs.push_back(potential);
+		potentialMetadataRegs.push_back(potential);
 	}
 
 	std::vector<Il2CppMetadataRegistration*> betterRegCandidates = { };
