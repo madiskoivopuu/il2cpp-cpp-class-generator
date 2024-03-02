@@ -23,14 +23,14 @@ std::vector<FieldData> ParseFieldsForType(MetadataState& state, Il2CppTypeDefini
 		if (fieldType->attrs & FIELD_ATTRIBUTE_STATIC) fieldData._static = true;
 
 		fieldData.name = ReplaceInvalidCharacters(GetStringFromIndex(state.header, field->nameIndex));
-		fieldData.type = fieldType->type;
+		fieldData.type = fieldType;
 
 		Il2CppFieldDefaultValue* defaultVal = GetFieldDefaultValueStruct(state.header, fieldIndex);
 		// somehow there's very large values in defaultVal->typeIndex sometimes, and negative ones too????
 		if (defaultVal && defaultVal->typeIndex >= 0 && defaultVal->typeIndex < state.metadataRegistration->typesCount) {
 			Il2CppType* defaultValueType = GetTypeFromIndex(state.il2cppBinary, state.metadataRegistration, defaultVal->typeIndex);
 			fieldData.defaultValuePtr = reinterpret_cast<uintptr_t>(reinterpret_cast<BYTE*>((char*)state.header + state.header->fieldAndParameterDefaultValueDataOffset) + defaultVal->dataIndex);
-			fieldData.defaultValueType = defaultValueType->type;
+			fieldData.defaultValueType = defaultValueType;
 		}
 		fields.push_back(fieldData);
 	}
@@ -54,7 +54,7 @@ std::vector<MethodArgument> ParseMethodArguments(MetadataState& state, Il2CppMet
 		if (paramDefaultValue) {
 			Il2CppType* defaultValueType = GetTypeFromIndex(state.il2cppBinary, state.metadataRegistration, paramDefaultValue->typeIndex);
 			argData.defaultValuePtr = reinterpret_cast<uintptr_t>(reinterpret_cast<BYTE*>((char*)state.header + state.header->fieldAndParameterDefaultValueDataOffset) + paramDefaultValue->dataIndex);
-			argData.defaultValueType = defaultValueType->type;
+			argData.defaultValueType = defaultValueType;
 		}
 
 		args.push_back(argData);
@@ -72,7 +72,7 @@ std::vector<MethodData> ParseMethodsForClass(MetadataState& state, Il2CppTypeDef
 		Il2CppType* methodReturnType = GetTypeFromIndex(state.il2cppBinary, state.metadataRegistration, methodDef->returnType);
 
 		methodData.name = ReplaceInvalidCharacters(GetStringFromIndex(state.header, methodDef->nameIndex));
-		methodData.returnType = methodReturnType->type;
+		methodData.returnType = methodReturnType;
 		methodData.returnByRef = methodReturnType->byref;
 		methodData.arguments = ParseMethodArguments(state, methodDef);
 
