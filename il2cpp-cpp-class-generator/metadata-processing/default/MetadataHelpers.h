@@ -48,6 +48,7 @@ Il2CppParameterDefinition* GetParamInfoFromIndex(Il2CppGlobalMetadataHeader* hea
 }
 
 Il2CppTypeDefinition* GetTypeDefinitionFromIndex(Il2CppGlobalMetadataHeader* header, int index) {
+	// TODO: get it from Il2CppType* on newer versions... ffs so many edge cases
 	return reinterpret_cast<Il2CppTypeDefinition*>((char*)header + header->typeDefinitionsOffset) + index;
 }
 
@@ -84,7 +85,9 @@ Il2CppParameterDefaultValue* GetParamDefaultValue(Il2CppGlobalMetadataHeader* he
 }
 
 Il2CppType* GetTypeFromIndex(IFile* il2cppBinary, Il2CppMetadataRegistration* metadataRegistration, int index) {
-	uintptr_t typesOffsetFromFileStart = il2cppBinary->MapVAToOffset(reinterpret_cast<uintptr_t>(metadataRegistration->types));
-	uintptr_t typeVirtualAddrPtr = *(reinterpret_cast<uintptr_t*>(il2cppBinary->fileBytes.data() + typesOffsetFromFileStart) + index);
-	return reinterpret_cast<Il2CppType*>(il2cppBinary->fileBytes.data() + il2cppBinary->MapVAToOffset(typeVirtualAddrPtr));
+	uintptr_t typesArrayOffsetFromFileStart = il2cppBinary->MapVAToOffset(reinterpret_cast<uintptr_t>(metadataRegistration->types));
+	Il2CppType** typesArrayStart = reinterpret_cast<Il2CppType**>(il2cppBinary->fileBytes.data() + typesArrayOffsetFromFileStart);
+	uintptr_t typeOffset = il2cppBinary->MapVAToOffset(*reinterpret_cast<uintptr_t*>(typesArrayStart + index));
+	Il2CppType* type = reinterpret_cast<Il2CppType*>(il2cppBinary->fileBytes.data() + typeOffset);
+	return type;
 }

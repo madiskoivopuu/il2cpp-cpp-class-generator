@@ -24,6 +24,7 @@ std::vector<FieldData> ParseFieldsForType(MetadataState& state, Il2CppTypeDefini
 
 		fieldData.name = ReplaceInvalidCharacters(GetStringFromIndex(state.header, field->nameIndex));
 		fieldData.type = fieldType;
+		fieldData.typeDef = GetTypeDefinitionFromIndex(state.header, field->typeIndex);
 
 		Il2CppFieldDefaultValue* defaultVal = GetFieldDefaultValueStruct(state.header, fieldIndex);
 		// somehow there's very large values in defaultVal->typeIndex sometimes, and negative ones too????
@@ -72,6 +73,7 @@ std::vector<MethodData> ParseMethodsForClass(MetadataState& state, Il2CppTypeDef
 	for (int methodIndex = typeDef->methodStart; methodIndex < typeDef->methodStart + typeDef->method_count; methodIndex++) {
 		MethodData methodData;
 		Il2CppMethodDefinition* methodDef = GetMethodInfoFromIndex(state.header, methodIndex);
+		GetTypeFromIndex(state.il2cppBinary, state.metadataRegistration, 0);
 		Il2CppType* methodReturnType = GetTypeFromIndex(state.il2cppBinary, state.metadataRegistration, methodDef->returnType);
 
 		methodData.name = ReplaceInvalidCharacters(GetStringFromIndex(state.header, methodDef->nameIndex));
