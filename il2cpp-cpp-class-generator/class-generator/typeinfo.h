@@ -3,34 +3,41 @@
 
 #include <vector>
 
+struct Il2CppTypeDefinition; // forward decl
+
 struct FieldData {
 	char* name;
 	bool _static;
 	bool _const;
 	Il2CppType* type;
+	Il2CppTypeDefinition* typeDef;
 	uintptr_t defaultValuePtr; // ptr to the default value in metadata, we will parse it later
 	Il2CppType* defaultValueType;
+	Il2CppTypeDefinition* defaultValueTypeDef;
 
-	FieldData() : name(NULL), _static(false), _const(false), type(NULL), defaultValuePtr(NULL), defaultValueType(NULL) {}
+	FieldData() : name(NULL), _static(false), _const(false), type(NULL), typeDef(NULL), defaultValuePtr(NULL), defaultValueType(NULL), defaultValueTypeDef(NULL) {}
 };
 
 struct MethodArgument {
 	char* name;
 	Il2CppType* type;
+	Il2CppTypeDefinition* typeDef;
 	bool passByRef;
 	uintptr_t defaultValuePtr;
 	Il2CppType* defaultValueType;
+	Il2CppTypeDefinition* defaultValueTypeDef;
 
-	MethodArgument() : name(NULL), type(NULL), passByRef(false), defaultValuePtr(NULL), defaultValueType(NULL) {}
+	MethodArgument() : name(NULL), type(NULL), typeDef(NULL), passByRef(false), defaultValuePtr(NULL), defaultValueType(NULL), defaultValueTypeDef(NULL) {}
 };
 
 struct MethodData {
 	char* name;
 	Il2CppType* returnType;
+	Il2CppTypeDefinition* returnTypeDef;
 	bool returnByRef;
 	std::vector<MethodArgument> arguments;
 
-	MethodData() : name(NULL), returnType(NULL), returnByRef(false), arguments({}) {}
+	MethodData() : name(NULL), returnType(NULL), returnTypeDef(NULL), returnByRef(false), arguments({}) {}
 };
 
 

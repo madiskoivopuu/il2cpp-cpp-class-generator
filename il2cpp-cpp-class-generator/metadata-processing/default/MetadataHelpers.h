@@ -47,6 +47,10 @@ Il2CppParameterDefinition* GetParamInfoFromIndex(Il2CppGlobalMetadataHeader* hea
 	return reinterpret_cast<Il2CppParameterDefinition*>((char*)header + header->parametersOffset) + index;
 }
 
+Il2CppTypeDefinition* GetTypeDefinitionFromIndex(Il2CppGlobalMetadataHeader* header, int index) {
+	return reinterpret_cast<Il2CppTypeDefinition*>((char*)header + header->typeDefinitionsOffset) + index;
+}
+
 Il2CppFieldDefaultValue* GetFieldDefaultValueStruct(Il2CppGlobalMetadataHeader* header, int fieldIndex) {
 	// not the cleanest method to cache but it'll work
 	static std::unordered_map<int, Il2CppFieldDefaultValue*> cachedDefaultValues;

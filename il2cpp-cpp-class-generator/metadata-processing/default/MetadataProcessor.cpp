@@ -31,6 +31,7 @@ std::vector<FieldData> ParseFieldsForType(MetadataState& state, Il2CppTypeDefini
 			Il2CppType* defaultValueType = GetTypeFromIndex(state.il2cppBinary, state.metadataRegistration, defaultVal->typeIndex);
 			fieldData.defaultValuePtr = reinterpret_cast<uintptr_t>(reinterpret_cast<BYTE*>((char*)state.header + state.header->fieldAndParameterDefaultValueDataOffset) + defaultVal->dataIndex);
 			fieldData.defaultValueType = defaultValueType;
+			fieldData.defaultValueTypeDef = GetTypeDefinitionFromIndex(state.header, defaultVal->typeIndex);
 		}
 		fields.push_back(fieldData);
 	}
@@ -47,7 +48,8 @@ std::vector<MethodArgument> ParseMethodArguments(MetadataState& state, Il2CppMet
 		argData.name = ReplaceInvalidCharacters(GetStringFromIndex(state.header, paramDef->nameIndex));
 
 		Il2CppType* argType = GetTypeFromIndex(state.il2cppBinary, state.metadataRegistration, paramDef->typeIndex);
-		argData.type = argType->type;
+		argData.type = argType;
+		argData.typeDef = GetTypeDefinitionFromIndex(state.header, paramDef->typeIndex);
 		argData.passByRef = argType->byref;
 
 		Il2CppParameterDefaultValue* paramDefaultValue = GetParamDefaultValue(state.header, argIndex);
@@ -55,6 +57,7 @@ std::vector<MethodArgument> ParseMethodArguments(MetadataState& state, Il2CppMet
 			Il2CppType* defaultValueType = GetTypeFromIndex(state.il2cppBinary, state.metadataRegistration, paramDefaultValue->typeIndex);
 			argData.defaultValuePtr = reinterpret_cast<uintptr_t>(reinterpret_cast<BYTE*>((char*)state.header + state.header->fieldAndParameterDefaultValueDataOffset) + paramDefaultValue->dataIndex);
 			argData.defaultValueType = defaultValueType;
+			argData.defaultValueTypeDef = GetTypeDefinitionFromIndex(state.header, paramDefaultValue->typeIndex);
 		}
 
 		args.push_back(argData);
@@ -73,6 +76,7 @@ std::vector<MethodData> ParseMethodsForClass(MetadataState& state, Il2CppTypeDef
 
 		methodData.name = ReplaceInvalidCharacters(GetStringFromIndex(state.header, methodDef->nameIndex));
 		methodData.returnType = methodReturnType;
+		methodData.returnTypeDef = GetTypeDefinitionFromIndex(state.header, methodDef->returnType);
 		methodData.returnByRef = methodReturnType->byref;
 		methodData.arguments = ParseMethodArguments(state, methodDef);
 
