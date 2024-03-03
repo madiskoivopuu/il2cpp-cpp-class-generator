@@ -109,4 +109,4 @@ Il2CppTypeDefinition* GetUnderlyingTypeDefFromType(Il2CppGlobalMetadataHeader* h
 		return GetTypeDefinitionFromIndex(header, type->data.klassIndex);
 	}
 	}
-}mp
+}
