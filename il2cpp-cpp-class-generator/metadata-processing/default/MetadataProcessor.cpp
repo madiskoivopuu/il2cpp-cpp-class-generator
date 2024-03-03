@@ -24,7 +24,7 @@ std::vector<FieldData> ParseFieldsForType(MetadataState& state, Il2CppTypeDefini
 
 		fieldData.name = ReplaceInvalidCharacters(GetStringFromIndex(state.header, field->nameIndex));
 		fieldData.type = fieldType;
-		fieldData.typeDef = GetTypeDefinitionFromIndex(state.header, field->typeIndex);
+		fieldData.typeDef = GetUnderlyingTypeDefFromType(state.header, state.il2cppBinary, state.metadataRegistration, fieldType);
 
 		Il2CppFieldDefaultValue* defaultVal = GetFieldDefaultValueStruct(state.header, fieldIndex);
 		// somehow there's very large values in defaultVal->typeIndex sometimes, and negative ones too????
@@ -32,7 +32,7 @@ std::vector<FieldData> ParseFieldsForType(MetadataState& state, Il2CppTypeDefini
 			Il2CppType* defaultValueType = GetTypeFromIndex(state.il2cppBinary, state.metadataRegistration, defaultVal->typeIndex);
 			fieldData.defaultValuePtr = reinterpret_cast<uintptr_t>(reinterpret_cast<BYTE*>((char*)state.header + state.header->fieldAndParameterDefaultValueDataOffset) + defaultVal->dataIndex);
 			fieldData.defaultValueType = defaultValueType;
-			fieldData.defaultValueTypeDef = GetTypeDefinitionFromIndex(state.header, defaultVal->typeIndex);
+			fieldData.defaultValueTypeDef = GetUnderlyingTypeDefFromType(state.header, state.il2cppBinary, state.metadataRegistration, defaultValueType);
 		}
 		fields.push_back(fieldData);
 	}
@@ -50,7 +50,7 @@ std::vector<MethodArgument> ParseMethodArguments(MetadataState& state, Il2CppMet
 
 		Il2CppType* argType = GetTypeFromIndex(state.il2cppBinary, state.metadataRegistration, paramDef->typeIndex);
 		argData.type = argType;
-		argData.typeDef = GetTypeDefinitionFromIndex(state.header, paramDef->typeIndex);
+		argData.typeDef = GetUnderlyingTypeDefFromType(state.header, state.il2cppBinary, state.metadataRegistration, argType);
 		argData.passByRef = argType->byref;
 
 		Il2CppParameterDefaultValue* paramDefaultValue = GetParamDefaultValue(state.header, argIndex);
@@ -58,7 +58,7 @@ std::vector<MethodArgument> ParseMethodArguments(MetadataState& state, Il2CppMet
 			Il2CppType* defaultValueType = GetTypeFromIndex(state.il2cppBinary, state.metadataRegistration, paramDefaultValue->typeIndex);
 			argData.defaultValuePtr = reinterpret_cast<uintptr_t>(reinterpret_cast<BYTE*>((char*)state.header + state.header->fieldAndParameterDefaultValueDataOffset) + paramDefaultValue->dataIndex);
 			argData.defaultValueType = defaultValueType;
-			argData.defaultValueTypeDef = GetTypeDefinitionFromIndex(state.header, paramDefaultValue->typeIndex);
+			argData.defaultValueTypeDef = GetUnderlyingTypeDefFromType(state.header, state.il2cppBinary, state.metadataRegistration, defaultValueType);
 		}
 
 		args.push_back(argData);
@@ -73,12 +73,11 @@ std::vector<MethodData> ParseMethodsForClass(MetadataState& state, Il2CppTypeDef
 	for (int methodIndex = typeDef->methodStart; methodIndex < typeDef->methodStart + typeDef->method_count; methodIndex++) {
 		MethodData methodData;
 		Il2CppMethodDefinition* methodDef = GetMethodInfoFromIndex(state.header, methodIndex);
-		GetTypeFromIndex(state.il2cppBinary, state.metadataRegistration, 0);
 		Il2CppType* methodReturnType = GetTypeFromIndex(state.il2cppBinary, state.metadataRegistration, methodDef->returnType);
 
 		methodData.name = ReplaceInvalidCharacters(GetStringFromIndex(state.header, methodDef->nameIndex));
 		methodData.returnType = methodReturnType;
-		methodData.returnTypeDef = GetTypeDefinitionFromIndex(state.header, methodDef->returnType);
+		methodData.returnTypeDef = GetUnderlyingTypeDefFromType(state.header, state.il2cppBinary, state.metadataRegistration, methodReturnType);
 		methodData.returnByRef = methodReturnType->byref;
 		methodData.arguments = ParseMethodArguments(state, methodDef);
 

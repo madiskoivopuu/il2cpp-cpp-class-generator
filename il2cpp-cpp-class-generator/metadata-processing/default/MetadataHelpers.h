@@ -91,3 +91,21 @@ Il2CppType* GetTypeFromIndex(IFile* il2cppBinary, Il2CppMetadataRegistration* me
 	Il2CppType* type = reinterpret_cast<Il2CppType*>(il2cppBinary->fileBytes.data() + typeOffset);
 	return type;
 }
+
+// Gets the bottom most type that either represents one of the basic types, or a user made class/enum. 
+Il2CppTypeDefinition* GetUnderlyingTypeDefFromType(Il2CppGlobalMetadataHeader* header, IFile* il2cppBinary, Il2CppMetadataRegistration* metadataRegistration, Il2CppType* type) {
+	switch (type->type) {
+	case IL2CPP_TYPE_GENERICINST:
+		uintptr_t* genericClassPtr = reinterpret_cast<uintptr_t*>(il2cppBinary->fileBytes.data() + il2cppBinary->MapVAToOffset(reinterpret_cast<uintptr_t>(type->data.generic_class)));
+		if (header->version >= 27) { // based on Il2CppDumper, the first field for genericinst can be a TypeDefinitionIndex or Il2CppType*
+			Il2CppType* type = reinterpret_cast<Il2CppType*>(il2cppBinary->fileBytes.data() + il2cppBinary->MapVAToOffset(*genericClassPtr));
+			return GetTypeDefinitionFromIndex(header, type->data.klassIndex);
+		}
+		else
+			return GetTypeDefinitionFromIndex(header, *reinterpret_cast<int*>(genericClassPtr));
+	// TODO: i really couldnt be arsed going over all possibilities, do that later
+
+	default:
+		return GetTypeDefinitionFromIndex(header, type->data.klassIndex);
+	}
+}
